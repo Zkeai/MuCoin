@@ -1,0 +1,104 @@
+{
+    "T": "模块",
+    "item": [
+      {
+        "name": "head",
+        "item": [
+          {
+            "name": "监控",
+            "item": [
+              {
+                "name": "交易所",
+                "icon": "icon-jiaoyisuo",
+                "item": [
+                  {
+                    "name": "币安",
+                    "path": "/monitor/binance",
+                    "click": true,
+                    "item": []
+                  },
+                  {
+                    "name": "欧易",
+                    "path": "/monitor/okx",
+                    "click": true,
+                    "item": []
+                  }
+                ]
+              },
+              {
+                "name": "链上",
+                "icon": "icon-lianshangzichan",
+                "item": [
+                  {
+                    "name": "Evm链",
+                    "path": "/dex/evm",
+                    "click": true,
+                    "item": []
+                  },
+                  {
+                    "name": "Solana",
+                    "path": "/dex/sol",
+                    "click": false,
+                    "item": []
+                  }
+                ]
+              },
+              {
+                "name": "其他",
+                "icon": "icon-qita",
+                "item": [
+                  {
+                    "name": "discord",
+                    "path": "/monitor/discord",
+                    "click": true,
+                    "item": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "工具",
+            "item": [
+              {
+                "name": "钱包",
+                "icon": "icon-qianbao2",
+                "item": [
+                  {
+                    "name": "批量创建钱包",
+                    "path": "/wallet/create",
+                    "click": true,
+                    "item": []
+                  },
+                  {
+                    "name": "创建靓号钱包",
+                    "path": "/wallet/beauty",
+                    "click": true,
+                    "item": []
+                  },
+                  {
+                    "name": "钱包授权",
+                    "path": "/wallet/authorization",
+                    "click": true,
+                    "item": []
+                  }
+                ]
+  
+              }
+            ]
+          },
+          {
+            "name": "空投",
+  
+            "item": [
+              {
+                "name": "空投查询",
+                "icon": "icon-kongtou",
+                "item": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
