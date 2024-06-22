@@ -3,9 +3,11 @@
 import React from 'react'
 import {useRouter} from 'next/navigation'
 import {useState} from "react"
+
 import Icon from '../components/Icon';
 import Style from './components.module.css'
 import { Popover } from '@douyinfe/semi-ui';
+import { Divider } from '@douyinfe/semi-ui';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
@@ -26,25 +28,37 @@ interface HeaderProps {
   
   const renderSubMenu = (items) => {
     return (
-      <ul className="flex space-x-10 min-w-[200px] w-auto  py-8 px-8 ">
+
+       <ul className="flex space-x-10 min-w-[200px] w-auto  py-8 px-8 ">
+        <div className="flex space-x-10 min-w-[200px] w-auto  justify-center">
         {items.map((subItem, index) => (
-          <li key={index} className="mr-4  ">
-            <div className="flex items-center  text-black cursor-default">
-              <Icon type={subItem.icon} size={20} color="blue"/>
-              {subItem.name}
-            </div>
-          {subItem.item && subItem.item.length > 0 && (
-            <div className="mt-8 flex flex-col space-y-6 items-center justify-center">
-              {subItem.item.map((item, index) => (
-                <a key={index} className="hover:text-amber-500 " href={item.path || '#'}>
-                <span >{item.name}</span>
-                </a>
-              ))}
-            </div>
-          )}
-          </li>
+         
+            <li key={index} className="mr-4 min-w-[100px]  ">
+     
+                <div className="flex items-center space-x-2  text-black cursor-default pl-4 font-semibold">
+                  <Icon type={subItem.icon} size={20} color="blue"/>
+                  <span>{subItem.name}</span>
+                </div>
+                <Divider className="pt-3" />
+                {
+                subItem.item && subItem.item.length > 0 && (
+                  <div className="mt-8 flex flex-col space-y-6 items-center justify-center">
+                    {subItem.item.map((item, index) => (
+                      <a key={index} className="hover:text-amber-500 " href={item.path || '#'}>
+                      <span >{item.name}</span>
+                      </a>
+                    ))}
+                  </div>)
+              }
+  
+
+     
+  
+            </li>
         ))}
-      </ul>
+        </div>
+        </ul>
+
     );
   };
 
