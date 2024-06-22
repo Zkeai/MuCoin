@@ -1,22 +1,24 @@
 // components/Icon.tsx
 import React from 'react';
-
+import Styles from './components.module.css'
 interface IconProps {
+  className: string;
   type: string;
   size?: number;
   color?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ type, size = 24, color = 'black', ...props }) => (
+const Icon: React.FC<IconProps> = ({ className, type, size = 24, color="black",...props }) => (
   <svg
-    className="icon"
+  className={`${className}`}
     aria-hidden="true"
     width={size}
     height={size}
     fill={color}
     {...props}
   >
-    <use xlinkHref={`#${type}`}></use>
+
+    <use  xlinkHref={`#${type}`}></use>
   </svg>
 );
 

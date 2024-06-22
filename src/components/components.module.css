@@ -1,0 +1,49 @@
+.headLeftIcon {
+  fill: black;
+  transition: fill 0.3s ease;
+}
+
+.headLeftIcon:hover {
+  fill: rgb(245 158 10);
+  cursor: pointer;
+}
+
+.title {
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  margin-left: 3rem;
+  transition: width 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.title:hover {
+  color: white !important;
+  cursor: pointer;
+}
+
+.title:hover .text {
+  display: none;
+}
+
+.zhuye {
+  display: none;
+}
+.title:hover .zhuye {
+  background: rgb(245 158 10);
+  fill: white;
+  border-radius: 10px;
+  display: flex;
+  height: 29px;
+  width: 68px;
+}
+.text {
+  font-size: large;
+}
+
+.social {
+  cursor: pointer;
+}
+
+.social:hover {
+  fill: white;
+}

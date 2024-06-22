@@ -1,126 +1,43 @@
 'use client';
 
 import React from 'react'
+import {useRouter} from 'next/navigation'
 import {useState} from "react"
 import Icon from '../components/Icon';
+import Style from './components.module.css'
 import { Popover } from '@douyinfe/semi-ui';
 
-  const menuData = {
-    "T": "模块",
-    "item": [
-      {
-        "name": "head",
-        "item": [
-          {
-            "name": "监控",
-            "item": [
-              {
-                "name": "交易所",
-                "icon": "icon-jiaoyisuo",
-                "item": [
-                  {
-                    "name": "币安",
-                    "path": "/monitor/binance",
-                    "click": true,
-                    "item": []
-                  },
-                  {
-                    "name": "欧易",
-                    "path": "/monitor/okx",
-                    "click": true,
-                    "item": []
-                  }
-                ]
-              },
-              {
-                "name": "链上",
-                "icon": "icon-lianshangzichan",
-                "item": [
-                  {
-                    "name": "Evm链",
-                    "path": "/dex/evm",
-                    "click": true,
-                    "item": []
-                  },
-                  {
-                    "name": "Solana",
-                    "path": "/dex/sol",
-                    "click": false,
-                    "item": []
-                  }
-                ]
-              },
-              {
-                "name": "其他",
-                "icon": "icon-qita",
-                "item": [
-                  {
-                    "name": "discord",
-                    "path": "/monitor/discord",
-                    "click": true,
-                    "item": []
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "name": "工具",
-            "item": [
-              {
-                "name": "钱包",
-                "icon": "icon-qianbao2",
-                "item": [
-                  {
-                    "name": "批量创建钱包",
-                    "path": "/wallet/create",
-                    "click": true,
-                    "item": []
-                  },
-                  {
-                    "name": "创建靓号钱包",
-                    "path": "/wallet/beauty",
-                    "click": true,
-                    "item": []
-                  },
-                  {
-                    "name": "钱包授权",
-                    "path": "/wallet/authorization",
-                    "click": true,
-                    "item": []
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "name": "空投",
-            "item": [
-              {
-                "name": "空投查询",
-                "icon": "icon-kongtou",
-                "item": []
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  };
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
+
+
+interface MenuItem {
+  name: string;
+  path?: string;
+  click?: boolean;
+  icon?: string;
+  item: MenuItem[];
+}
+
+interface HeaderProps {
+  T: string;
+  item: MenuItem[];
+}
+  
   const renderSubMenu = (items) => {
     return (
-      <ul className="flex space-x-10 min-w-[150px] w-auto m-4 p-4  justify-center ">
+      <ul className="flex space-x-10 min-w-[200px] w-auto  py-8 px-8 ">
         {items.map((subItem, index) => (
-          <li key={index} className="mr-4">
-            <div className="flex items-center text-black">
+          <li key={index} className="mr-4  ">
+            <div className="flex items-center  text-black cursor-default">
               <Icon type={subItem.icon} size={20} color="blue"/>
               {subItem.name}
             </div>
           {subItem.item && subItem.item.length > 0 && (
-            <div className="mt-8 flex flex-col space-y-6 items-center">
+            <div className="mt-8 flex flex-col space-y-6 items-center justify-center">
               {subItem.item.map((item, index) => (
-                <a className="hover:text-cyan-400 " href={item.path || '#'}>
-                <span key={index}>{item.name}</span>
+                <a key={index} className="hover:text-amber-500 " href={item.path || '#'}>
+                <span >{item.name}</span>
                 </a>
               ))}
             </div>
@@ -131,23 +48,35 @@ import { Popover } from '@douyinfe/semi-ui';
     );
   };
 
-const Header = () => {
 
-  const [menu, setMenu] = useState(menuData.item[0].item);
+const Header: React.FC<HeaderProps> = (menuData) => {
+  const router = useRouter();
+  const [menu, setMenu] = useState(menuData.menuData.item[0].item);
+  const { address, isConnected } = useAccount();
+  const titleClickHandle = ()=>{
+    router.push("/")
+  }
+
+
   return (
-    <div className={`fixed top-0 left-0 right-0 flex items-center shadow-md h-16 p-4`}>
-        <div className="flex-none w-40">
-          01
+    <div className={`fixed top-0 left-0 right-0 flex items-center shadow-md font-bold h-16 p-4 z-100 backdrop-blur`}>
+        <div className={`flex flex-none w-40 space-x-10 justify-center text-center`}>
+            <Icon className={Style.headLeftIcon}  type="icon-gedian" size={28}  />
+            <div className={Style.title} onClick={titleClickHandle}>
+            <span className={Style.text}>MuCoin</span>
+              <Icon className={Style.zhuye}  type="icon-zhuye" size={28}  />
+            </div>
         </div>
-        <div className="flex-grow flex justify-center  ">
+        <div className={`flex-grow flex justify-center`}>
           <nav>
-            <ul className="flex space-x-8">
+            <ul className="flex space-x-8 ">
             {menu.map((menuItem, index) => (
             <li key={index} className="relative group">
               <Popover
+              spacing={15}
               content={renderSubMenu(menuItem.item)}
               >
-              <button className="flex items-center">
+              <button className="flex items-center px-2 py-1 rounded-lg text-lg  hover:bg-amber-500 hover:text-white ">
                 {menuItem.icon && <span className={`iconfont ${menuItem.icon} mr-2`}></span>}
                 {menuItem.name}
               </button>
@@ -159,8 +88,11 @@ const Header = () => {
             </ul>
           </nav>
         </div>
-        <div className="flex-none w-40">
-          03
+        <div className="relative w-1/4 space-x-30 flex-none flex pb-10" >
+          <div className="absolute right-0 ">
+          <ConnectButton />
+          </div>
+          
         </div>
     </div>
   )

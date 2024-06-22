@@ -21,3 +21,15 @@ body {
   padding: 0;
   margin: 0;
 }
+
+body::-webkit-scrollbar {
+  width: 2px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: rgb(121, 122, 124);
+}
+body::-webkit-scrollbar-track {
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.1);
+}
