@@ -20,7 +20,7 @@ const Page = ({ children }: DashboardLayoutProps) => {
         <div className="flex-1 flex flex-col">
           <div className=" flex items-center h-8 w-full shadow-sm"><Tab></Tab></div>
           <div className=" body flex-1 overflow-y-auto ">
-            <div className=" flex flex-col space-y-8 m-9 ">
+            <div className=" flex flex-col space-y-8  ">
                 {children}
             </div>
           </div>

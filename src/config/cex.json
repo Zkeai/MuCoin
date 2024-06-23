@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Binance",
+    "icon": "icon-Binance",
+    "path": "withdrawal/binance"
+  },
+  {
+    "name": "Okex",
+    "icon": "icon-okex",
+    "path": "withdrawal/okex"
+  },
+  {
+    "name": "Bitget",
+    "icon": "icon-bitget",
+    "path": "withdrawal/bitget"
+  }
+]

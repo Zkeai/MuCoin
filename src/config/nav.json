@@ -4,7 +4,28 @@
     "text": "首页",
     "icon": "icon-shouye"
   },
-
+  {
+    "itemKey": "withdrawal",
+    "text": "交易所提币",
+    "icon": "icon-jiaoyisuo",
+    "items": [
+      {
+        "itemKey": "withdrawal/binance",
+        "text": "Binance 交易所提币",
+        "icon": "icon-Binance"
+      },
+      {
+        "itemKey": "withdrawal/okex",
+        "text": "okex 交易所提币",
+        "icon": "icon-okex"
+      },
+      {
+        "itemKey": "withdrawal/bitget",
+        "text": "bitget 交易所提币",
+        "icon": "icon-bitget"
+      }
+    ]
+  },
   {
     "itemKey": "evm",
     "text": "EVM链",

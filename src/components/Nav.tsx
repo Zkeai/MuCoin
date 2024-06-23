@@ -41,7 +41,7 @@ const NavNode = () => {
     };
 
     return (
-        <Nav 
+        <Nav
         mode = "vertical"
         onSelect={handleSelect}
         selectedKeys={[activeTab]}
@@ -49,9 +49,9 @@ const NavNode = () => {
             <Nav.Header logo={<IconSemiLogo style={{ height: '30px', fontSize: 30 }} />} text="Mucoin" />
             {jsonData.map(item => (
                 item.items ? (
-                    <Nav.Sub key={item.itemKey} itemKey={item.itemKey} text={item.text} icon={<Icon type={item.icon} />}>
+                    <Nav.Sub  key={item.itemKey} itemKey={item.itemKey} text={item.text} icon={<Icon type={item.icon} />}>
                         {item.items.map(subItem => (
-                            <Nav.Item key={subItem.itemKey} itemKey={subItem.itemKey} text={subItem.text} icon={<Icon type={subItem.icon} />} />
+                            <Nav.Item style={{ paddingLeft: '40px' }}  key={subItem.itemKey} itemKey={subItem.itemKey} text={subItem.text} icon={<Icon type={subItem.icon} />} />
                         ))}
                     </Nav.Sub>
                 ) : (

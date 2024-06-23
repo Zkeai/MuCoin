@@ -15,7 +15,9 @@ const useTabs = () => {
 
   useEffect(() => {
     if (isClient) {
-      const initialTab = tabsData.find(item => item.path === router.pathname);
+      const currentPath = router.pathname;
+      const initialTab = tabsData.find((item) => item.path === currentPath);
+
       if (initialTab) {
         dispatch(changeActiveTab(initialTab.title));
       }

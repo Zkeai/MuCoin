@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@binance/connector": "^3.3.0",
     "@douyinfe/semi-icons-lab": "^2.60.1",
     "@douyinfe/semi-ui": "^2.60.1",
     "@rainbow-me/rainbowkit": "^2.1.2",
