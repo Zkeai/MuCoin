@@ -47,3 +47,49 @@
 .social:hover {
   fill: white;
 }
+
+/* TabButton */
+.tabBt {
+  position: relative;
+  padding: 3px 15px 3px 15px;
+  background-color: white;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: background-color 0.1s;
+}
+
+.tabBt:hover {
+  background-color: #f0f0f0;
+}
+
+.tabBt.active {
+  background-color: #42b983;
+  color: white;
+}
+
+.tabBt.noactive {
+  background-color: white;
+  color: black;
+}
+
+.circle {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.tab {
+  position: absolute;
+  fill: black;
+  top: 1px;
+  right: 1px;
+  cursor: pointer;
+}
+.tab:hover {
+  background-color: white;
+  fill: white;
+  border-radius: 50%;
+}

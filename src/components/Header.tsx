@@ -3,14 +3,12 @@
 import React from 'react'
 import {useRouter} from 'next/navigation'
 import {useState} from "react"
-
 import Icon from '../components/Icon';
 import Style from './components.module.css'
 import { Popover } from '@douyinfe/semi-ui';
-import { Divider } from '@douyinfe/semi-ui';
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
+import JSonData from '/src/config/header.json'
 
 
 interface MenuItem {
@@ -35,11 +33,11 @@ interface HeaderProps {
          
             <li key={index} className="mr-4 min-w-[100px]  ">
      
-                <div className="flex items-center space-x-2  text-black cursor-default pl-4 font-semibold">
+                <div className="flex items-center space-x-2  text-black cursor-default pl-4 font-bold">
                   <Icon type={subItem.icon} size={20} color="blue"/>
                   <span>{subItem.name}</span>
                 </div>
-                <Divider className="pt-3" />
+
                 {
                 subItem.item && subItem.item.length > 0 && (
                   <div className="mt-8 flex flex-col space-y-6 items-center justify-center">
@@ -63,9 +61,9 @@ interface HeaderProps {
   };
 
 
-const Header: React.FC<HeaderProps> = (menuData) => {
+const Header: React.FC<HeaderProps> = () => {
   const router = useRouter();
-  const [menu, setMenu] = useState(menuData.menuData.item[0].item);
+  const [menu, setMenu] = useState(JSonData.item[0].item);
   const { address, isConnected } = useAccount();
   const titleClickHandle = ()=>{
     router.push("/")

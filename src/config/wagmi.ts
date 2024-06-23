@@ -1,11 +1,7 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import {
-  arbitrum,
-  base,
-  mainnet,
-  optimism,
   bsc,
-
+  mainnet,
 } from 'wagmi/chains';
 
 export const config = getDefaultConfig({
@@ -14,8 +10,6 @@ export const config = getDefaultConfig({
   chains: [
     bsc,
     mainnet,
-    arbitrum,
-
   ],
   ssr: true,
 });

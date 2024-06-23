@@ -7,13 +7,13 @@ interface IconProps {
   color?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ className, type, size = 24, color="black",...props }) => (
+const Icon: React.FC<IconProps> = ({type,...props }) => (
+    
   <svg
-  className={`${className}`}
     aria-hidden="true"
-    width={size}
-    height={size}
-    fill={color}
+    width="18"
+    height="18"
+
     {...props}
   >
 

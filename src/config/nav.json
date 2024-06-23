@@ -1,0 +1,17 @@
+[
+  {
+    "itemKey": "dashboard",
+    "text": "首页",
+    "icon": "icon-shouye"
+  },
+
+  {
+    "itemKey": "evm",
+    "text": "EVM链",
+    "icon": "icon-ETH",
+    "items": [
+      { "itemKey": "wallet", "text": "钱包创建" },
+      { "itemKey": "trance", "text": "钱包转账" }
+    ]
+  }
+]

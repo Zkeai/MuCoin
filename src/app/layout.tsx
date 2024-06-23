@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
+
 import "./globals.css";
 import Header  from "../components/Header"
 import Footer  from "../components/Footer"
-import getJsonData from '../utils/file.ts';
+
 
 
 import '@rainbow-me/rainbowkit/styles.css';
@@ -21,8 +23,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const data = getJsonData();
-
   return (
     <html lang="en">
       <head>
@@ -33,15 +33,17 @@ export default function RootLayout({
           />
       </head>
       <body className={inter.className}>
-        <header>
-        <Providers>
-          <Header menuData={data} />
-        </Providers>
-        </header>
-        {children}
+
+          <header>
+          <Providers>
+            <Header />
+          </Providers>
+          </header>
+          {children}
         <footer>
-        <Footer />
+          <Footer />
         </footer>
+
       </body>
     </html>
   );

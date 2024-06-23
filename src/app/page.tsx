@@ -1,9 +1,10 @@
-import Image from "next/image";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
+  redirect('/dashboard');
   return (
     <main className="mt-16 p-4 h-auto">
-      <h1> Home Page</h1>
+     loading...
     </main>
   );
 }
