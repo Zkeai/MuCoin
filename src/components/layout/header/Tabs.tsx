@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Style from './components.module.css';
-import Icon from '../components/Icon';
-import useTabs from '../hooks/useTabs';
+import Style from '/src/components/components.module.css';
+import Icon from '/src/components/custom/Icon';
+import useTabs from '/src/hooks/layout/useTabs';
 
 const Tabs = () => {
   const { tabsData, activeTab, handleItemClick, handleItemClose, isClient } = useTabs();

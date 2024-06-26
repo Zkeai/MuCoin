@@ -1,8 +1,8 @@
 "use client";
 import React from 'react';
 import "./index.css"
-import Nav from '/src/components/Nav'
-import Tab from '/src/components/Tabs'
+import Nav from '/src/components/layout/main/Nav'
+import Tab from '/src/components/layout/header/Tabs'
 import { BackTop } from '@douyinfe/semi-ui';
 
 import { Provider } from 'react-redux'

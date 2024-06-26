@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTab, removeTab, changeActiveTab } from "../redux/states/headerSlice";
+import { addTab, removeTab, changeActiveTab } from "/src/redux/states/headerSlice";
 import useIsClient from './useIsClient'
 
 const useTabs = () => {

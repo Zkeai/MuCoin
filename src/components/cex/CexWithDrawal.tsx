@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
 import { useRouter,usePathname } from 'next/navigation';
-import Style from './components.module.css';
-import Icon from '/src/components/Icon';
-import items from '../config/cex.json';
+import Style from '/src/components/components.module.css';
+import Icon from '/src/components/custom/Icon';
+import items from '/src/config/cex.json';
 
 const CexWithDrawal = () => {
   const router = useRouter();

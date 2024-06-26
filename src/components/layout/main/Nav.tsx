@@ -5,9 +5,9 @@ import { Nav } from '@douyinfe/semi-ui';
 import { IconSemiLogo } from '@douyinfe/semi-icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { useDispatch, useSelector} from 'react-redux';
-import { addTab, changeActiveTab } from "../redux/states/headerSlice";
+import { addTab, changeActiveTab } from "/src/redux/states/headerSlice";
 import jsonData from '/src/config/nav.json';
-import Icon from '../components/Nav-Icon';
+import Icon from '/src/components/layout/header/Nav-Icon';
 
 const NavNode = () => {
     const dispatch = useDispatch();

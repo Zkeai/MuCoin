@@ -1,11 +1,16 @@
 'use client';
 import React from 'react';
 import Link from "next/link";
-import Icon from '/src/components/Icon';
+import { Button } from '@douyinfe/semi-ui';
+import Icon from '/src/components/custom/Icon';
 import { useRouter,usePathname } from 'next/navigation';
-import CexWithDrawal from '/src/components/CexWithDrawal';
+import CexWithDrawal from '/src/components/cex/CexWithDrawal';
 
-const Layout = () => {
+type LayoutProps = {
+  children: ReactNode;
+};
+
+const Layout = ({children}:LayoutProps) => {
   const router = useRouter();
   const pathname = usePathname();
     // 获取路径中的交易所名称部分
@@ -16,6 +21,7 @@ const Layout = () => {
     };
     const exchangeName = getExchangeName();
    
+
   return (
     <div className="flex flex-col justify-center items-center space-y-12 bg-[#f4f7fa] min-h-screen">
       <div className="space-y-5 flex flex-col items-center mt-10">
@@ -25,7 +31,7 @@ const Layout = () => {
           <Link className="underline text-amber-500 ml-1" href={`/dashboard/doc`}>使用教程</Link>
         </div>
       </div>
-      <div className="flex flex-col  items-center w-[40vw] h-[80vh] shadow-2xl bg-[#ffffff] rounded-lg p-5">
+      <div className="flex flex-col  items-center w-[40vw]  shadow-2xl bg-[#ffffff] rounded-lg p-5">
         <div className="text-[#8895a7] space-y-2 w-full">
           <span className="text-md font-[500]">MuCoin</span>
           <ul className="text-[12px] space-y-1 list-disc ml-4">
@@ -38,10 +44,10 @@ const Layout = () => {
         <div className="mt-8">
           <CexWithDrawal />
         </div>
-        <div mt-8>
-          
+        <div className="mt-8">
+          {children}
         </div>
-       
+
       </div>
     </div>
   );

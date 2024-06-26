@@ -3,13 +3,13 @@ import { Inter } from "next/font/google";
 
 
 import "./globals.css";
-import Header  from "../components/Header"
-import Footer  from "../components/Footer"
+import Header  from "/src/components/layout/header/Header"
+import Footer  from "/src/components/layout/footer/Footer"
 
 
 
 import '@rainbow-me/rainbowkit/styles.css';
-import { Providers } from '../context/providers';
+import { Providers } from '/src/context/providers';
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -3,8 +3,8 @@
 import React from 'react'
 import {useRouter} from 'next/navigation'
 import {useState} from "react"
-import Icon from '../components/Icon';
-import Style from './components.module.css'
+import Icon from '/src/components/custom/Icon';
+import Style from '/src/components/components.module.css'
 import { Popover } from '@douyinfe/semi-ui';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
