@@ -187,7 +187,7 @@ const BinanceComponent = () => {
             textVal={textAreaValue}
             setTextVal={setTextAreaVal}
             modalOpen={modalOpen}
-            setModalVisible={() => { setOpenModal(open) }}
+            setModalVisible={() => { setOpenModal(false) }}
           ></Modal>
         </div>
         <CustomTextArea value={textAreaValue} onChange={setTextAreaVal} />

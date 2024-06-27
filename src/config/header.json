@@ -12,14 +12,20 @@
               "icon": "icon-jiaoyisuo",
               "item": [
                 {
-                  "name": "币安",
-                  "path": "/monitor/binance",
+                  "name": "Binance",
+                  "path": "/dashboard/withdrawal/binance",
                   "click": true,
                   "item": []
                 },
                 {
-                  "name": "欧易",
-                  "path": "/monitor/okx",
+                  "name": "Okx",
+                  "path": "/dashboard/withdrawal/okex",
+                  "click": true,
+                  "item": []
+                },
+                {
+                  "name": "Bitget",
+                  "path": "/dashboard/withdrawal/bitget",
                   "click": true,
                   "item": []
                 }
