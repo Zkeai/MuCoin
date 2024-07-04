@@ -57,8 +57,28 @@ const useBinanceComponent = () => {
         changeCoins(data)
       
         if (open) {
-          const credentials = [{ ["binance"]: { apiKey, secretKey } }];
-          localStorage.setItem('cexInfo', JSON.stringify(credentials));
+           // 定义新的 credentials
+          const credentials = { "binance": { apiKey, secretKey } };
+          let oldData = localStorage.getItem("cexInfo")
+          if(!oldData){
+            oldData = "[]"
+          }
+          let jsonArray = JSON.parse(oldData);
+  
+          // 检查是否已经存在 binance 对象
+          const index = jsonArray.findIndex(item => item.binance);
+          // 如果已经存在，则替换
+          if (index !== -1) {
+            jsonArray[index] = credentials;
+          } else {
+            // 如果不存在，则添加新的对象
+            jsonArray.push(credentials);
+          }
+
+          const newJsonString = JSON.stringify(jsonArray, null, 2);
+  
+          localStorage.setItem('cexInfo', newJsonString);
+
         }
 
 

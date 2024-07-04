@@ -2,7 +2,7 @@ import React from 'react'
 
 const wallet = () => {
   return (
-    <div> wallet</div>
+    <div className=" bg-[f4f7fa]"> wallet</div>
   )
 }
 

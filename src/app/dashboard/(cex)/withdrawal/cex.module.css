@@ -2,6 +2,7 @@
   cursor: pointer;
   border: 1px solid transparent;
   transition: border-color 0.3s, color 0.3s;
+  border-color: rgb(217, 223, 221);
 }
 
 .netw.active {
