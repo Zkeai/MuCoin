@@ -25,7 +25,7 @@ export const okexAccountInfo  = async ({ apiKey, secretKey, passphrase}) => {
     const response = await client.getBalances();
     return response;
   } catch (error) {
-    throw new Error('OKXGetBalances failed');
+    throw new Error(error.msg);
   }
 };
 
@@ -36,6 +36,6 @@ export const okexhNetworkList = async ({ apiKey, secretKey, passphrase,value}) =
     const response = await client.getCurrencies(value);
     return response;
   } catch (error) {
-    throw new Error('OKXGetNetworkList failed');
+    throw new Error(error.msg);
   }
 };
