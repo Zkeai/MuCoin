@@ -5,7 +5,7 @@ import '/src/components/components.module.css'
 import useCexComponent from '/src/hooks/cex/useBinanceAccountinfo.ts'
 
 
-const LineNumberedTextArea = ({ value, onChange }) => {
+const LineNumberedTextArea = ({ value, onChange,customStyle }) => {
   const {textAreaRef}  = useCexComponent()
   const lineNumbersRef = useRef(null);
 
@@ -29,7 +29,7 @@ const LineNumberedTextArea = ({ value, onChange }) => {
       }, [value]);
 
   return (
-    <div className="flex w-[36vw] max-h-[212px]">
+    <div className= { !customStyle ? "flex w-[36vw] max-h-[212px]" :customStyle}>
       <div
         id="line-numbers"
         ref={lineNumbersRef}
