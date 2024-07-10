@@ -1,4 +1,7 @@
 import { ethers } from 'ethers';
+import {Keypair, PublicKey} from '@solana/web3.js'
+import * as bs58 from 'bs58';
+
 
 export const createWallets = (numberOfWallets) => {
     let wallets = [];
@@ -11,3 +14,19 @@ export const createWallets = (numberOfWallets) => {
     }
     return wallets;
 }
+
+
+export const createSolWallets = (numberOfWallets) =>{
+    let wallets = [];
+    for (let i = 0; i < numberOfWallets; i++) {
+        const wallet = Keypair.generate()
+        const publicKey = wallet.publicKey.toBase58();
+        const privateKey = wallet.secretKey.slice(0);
+        wallets.push({
+            address: publicKey,
+            privateKey: bs58.encode(Uint8Array.from(privateKey))
+        });
+    }
+    return wallets;
+}
+

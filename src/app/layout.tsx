@@ -33,13 +33,12 @@ export default function RootLayout({
           />
       </head>
       <body className={inter.className}>
-
-          <header>
           <Providers>
-            <Header />
+            <header>
+              <Header />
+            </header>
+            {children}
           </Providers>
-          </header>
-          {children}
         <footer>
           <Footer />
         </footer>

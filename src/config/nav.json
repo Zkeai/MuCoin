@@ -27,12 +27,25 @@
     ]
   },
   {
-    "itemKey": "evm",
-    "text": "EVM链",
-    "icon": "icon-ETH",
+    "itemKey": "wallet",
+    "text": "链上钱包",
+    "icon": "icon-qianbao1",
     "items": [
-      { "itemKey": "wallet", "text": "钱包创建" },
-      { "itemKey": "trance", "text": "钱包转账" }
+      {
+        "itemKey": "wallet/create",
+        "text": "钱包批量生成",
+        "icon": "icon-qianbao"
+      },
+      {
+        "itemKey": "wallet/m21",
+        "text": "钱包归集",
+        "icon": "icon-duoduiyi"
+      }
     ]
+  },
+  {
+    "itemKey": "rpc",
+    "text": "RPC节点测速",
+    "icon": "icon-RPC"
   }
 ]

@@ -13,12 +13,12 @@ const Tabs = () => {
   }
 
   return (
-    <div className="flex items-center">
-      <ul className="flex space-x-1">
+    <div className="flex items-center ">
+      <ul className="flex space-x-1 h-6 ml-5 leading-4 text-sm">
         {tabsData.map((item, index) => (
           <li
             key={item.path}
-            className={`${Style.tabBt} ${activeTab === item.title ? Style.active : Style.noactive}`}
+            className={`${Style.tabBt} ${activeTab === item.title ? Style.active : Style.noactive} `}
             onClick={() => handleItemClick(item)}
           >
             <div className={`${activeTab === item.title ? Style.circle : ''}`} />

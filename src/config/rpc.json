@@ -1,0 +1,117 @@
+[
+  {
+    "name": "Ethereum",
+    "chainld": "1",
+    "rpcs": [
+      "https://eth.llamarpc.com",
+      "https://eth-pokt.nodies.app",
+      "https://rpc.ankr.com/eth",
+      "https://ethereum.blockpi.network/v1/rpc/public",
+      "https://api.mycryptoapi.com/eth",
+      "https://cloudflare-eth.com",
+      "https://rpc.flashbots.net",
+      "https://eth.meowrpc.com",
+      "https://eth-pokt.nodies.app",
+      "https://1rpc.io/eth",
+      "https://eth.meowrpc.com"
+    ]
+  },
+  {
+    "name": "BSC",
+    "chainld": "56",
+    "rpcs": [
+      "https://binance.llamarpc.com",
+      "https://bsc-pokt.nodies.app",
+      "https://bsc.drpc.org",
+      "https://1rpc.io/bnb",
+      "https://bsc.meowrpc.com",
+      "https://bsc.blockpi.network/v1/rpc/public",
+      "https://data-seed-prebsc-1-s1.binance.org:8545",
+      "https://binance.nodereal.io",
+      "https://bsc-dataseed.binance.org",
+      "https://bsc-dataseed2.binance.org",
+      "https://bsc-dataseed4.binance.org",
+      "https://bsc-dataseed1.defibit.io",
+      "https://bsc-dataseed2.defibit.io",
+      "https://bsc-dataseed3.defibit.io"
+    ]
+  },
+  {
+    "name": "Arb",
+    "chainld": "42161",
+    "rpcs": [
+      "https://arbitrum.llamarpc.com",
+      "https://rpc.ankr.com/arbitrum",
+      "https://1rpc.io/arb",
+      "https://api.tatum.io/v3/blockchain/node/bsc-mainnet",
+      "https://arb-pokt.nodies.app",
+      "https://arbitrum-one.public.blastapi.io"
+    ]
+  },
+  {
+    "name": "Polygon",
+    "chainld": "137",
+    "rpcs": [
+      "https://polygon.llamarpc.com",
+      "https://rpc.ankr.com/polygon",
+      "https://polygon.blockpi.network/v1/rpc/public",
+      "https://polygon-rpc.com",
+      "https://polygon.drpc.org",
+      "https://api.tatum.io/v3/blockchain/node/polygon-mainnet",
+      "https://rpc-mainnet.matic.network"
+    ]
+  },
+  {
+    "name": "Avaxc",
+    "chainld": "43114",
+    "rpcs": [
+      "https://api.zan.top/node/v1/avax/mainnet/public/ext/bc/C/rpc",
+      "https://api.tatum.io/v3/blockchain/node/avax-mainnet",
+      "https://avalanche.drpc.org",
+      "https://avax.meowrpc.com",
+      "https://api.tatum.io/v3/blockchain/node/avax-mainnet",
+      "https://avalanche.api.onfinality.io/public/ext/bc/C/rpc",
+      "https://avalanche.public-rpc.com"
+    ]
+  },
+  {
+    "name": "Op",
+    "chainld": "10",
+    "rpcs": [
+      "https://optimism.llamarpc.com",
+      "https://api.zan.top/node/v1/opt/mainnet/public",
+      "https://1rpc.io/op",
+      "https://optimism.meowrpc.com",
+      "https://optimism.meowrpc.com",
+      "https://endpoints.omniatech.io/v1/op/mainnet/public",
+      "https://op-pokt.nodies.app"
+    ]
+  },
+  {
+    "name": "Scroll",
+    "chainld": "534354",
+    "rpcs": [
+      "https://mainnet-rpc.scroll.io",
+      "https://rpc.scroll.io",
+      "https://scroll-mainnet.public.blastapi.io",
+      "https://scroll.blockpi.network/v1/rpc/public",
+      "https://scroll.drpc.org",
+      "https://scroll-mainnet.rpc.grove.city/v1/a7a7c8e2",
+      "https://scroll-mainnet.chainstacklabs.com",
+      "https://rpc.ankr.com/scroll"
+    ]
+  },
+  {
+    "name": "Opbnb",
+    "chainld": "204",
+    "rpcs": [
+      "https://opbnb-mainnet-rpc.bnbchain.org",
+      "https://opbnb.drpc.org",
+      "https://opbnb-rpc.publicnode.com",
+      "https://1rpc.io/opbnb",
+      "https://opbnb-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
+      "https://opbnb-mainnet.nodereal.io/v1/e9a36765eb8a40b9bd12e680a1fd2bc5",
+      "wss://opbnb.drpc.org"
+    ]
+  }
+]

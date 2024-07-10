@@ -1,9 +1,9 @@
-import React from 'react';
-import "./index.css"
-const Page = () => {
+import React from 'react'
+
+const page = () => {
   return (
-    <div>123</div>
-  );
+    <div>page</div>
+  )
 }
 
-export default Page;
+export default page

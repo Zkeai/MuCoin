@@ -111,6 +111,18 @@
 }
 
 /* 不显示自定义多行文本框的纵向滚动条 */
-#line-numbers::-webkit-scrollbar {
-  width: 0;
+.lineNumbers {
+  overflow: hidden;
+  user-select: none;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.lineNumbers::-webkit-scrollbar {
+  display: none;
+}
+
+.lineNumbers {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
