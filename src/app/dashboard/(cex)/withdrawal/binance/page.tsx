@@ -1,5 +1,5 @@
 'use client';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
 import useBinanceComponent from '/src/hooks/cex/useBinanceAccountinfo.ts'; 
 import CustomTextArea from '/src/components/custom/CustomTextArea';
@@ -8,7 +8,24 @@ import Icon from '/src/components/custom/Icon';
 import Styles from '../cex.module.css';
 import { binanceWithDrawal } from '/src/http/api/cex/binance/api.ts';
 
-const BinanceComponent = () => {
+// 定义网络列表的类型
+interface Network {
+  network: string;
+  name: string;
+  withdrawFee: string;
+  coin: string;
+  withdrawMin: string;
+}
+
+// 定义币种信息的类型
+interface CoinInfo {
+  asset: string;
+  free: string;
+  locked: string;
+  freeze: string;
+}
+
+const BinanceComponent: React.FC = () => {
   const {
     apiKey,
     secretKey,
@@ -27,16 +44,16 @@ const BinanceComponent = () => {
     coins
   } = useBinanceComponent();
 
-  const [selectedCoin, setSelectedCoin] = useState(coins.length > 0 ? coins[0] : "");
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [drawSuccess, setDrawSuccess] = useState(null);
-  const [drawFail, setDrawFail] = useState(null);
+  const [selectedCoin, setSelectedCoin] = useState<string>(coins.length > 0 ? coins[0] : "");
+  const [activeIndex, setActiveIndex] = useState<string | null>(null);
+  const [drawSuccess, setDrawSuccess] = useState<string | null>(null);
+  const [drawFail, setDrawFail] = useState<string | null>(null);
 
-  const handleClick = (index) => {
+  const handleClick = (index: string) => {
     setActiveIndex(index); 
   };
 
-  const handleCoinChange = useCallback((value) => {
+  const handleCoinChange = useCallback((value: string) => {
     setSelectedCoin(value);
   }, []);
 
@@ -104,7 +121,7 @@ const BinanceComponent = () => {
             position='topLeft'
           >
             <div className="cursor-help">
-              <Icon type="icon-yihuo" sizq={2} />
+              <Icon type="icon-yihuo" size={2} />
             </div>
           </Tooltip>
         </div>
@@ -135,7 +152,7 @@ const BinanceComponent = () => {
               header={<div>现货账户信息</div>}
               bordered
               dataSource={accountInfo}
-              renderItem={(item) => (
+              renderItem={(item: CoinInfo) => (
                 <List.Item key={item.asset}>
                   {item.asset}: {`[可用] ${item.free} ---- [锁仓] ${item.locked} ---- [冻结] ${item.freeze}`}
                 </List.Item>
@@ -158,7 +175,7 @@ const BinanceComponent = () => {
             <div>
               {networkList[selectedCoin] && (
                 <ul className="grid grid-cols-2 gap-6">
-                  {networkList[selectedCoin].map(network => (
+                  {networkList[selectedCoin].map((network: Network) => (
                     <li key={network.network}>
                       <div
                         className={`flex space-x-1 w-[17vw] h-16 rounded-lg pl-2 pt-1

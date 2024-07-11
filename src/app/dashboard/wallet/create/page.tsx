@@ -1,20 +1,48 @@
-"use client";
-import React, { useState, useEffect } from "react";
+'use client';
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { Select, Input, Toast } from "@douyinfe/semi-ui";
 import SvgIcon from "/src/components/custom/Icon";
 import Style from "../wallet.module.css";
-import { createWallets, createSolWallets,createBtcWallets } from "/src/lib/wallet.ts";
+import { createWallets, createSolWallets } from "/src/lib/wallet.ts";
 import CustomTextArea from "/src/components/custom/CustomTextArea";
 
-const Wallet = () => {
-  const [label, setLabel] = useState({
-    value: "ETH",
-    label: "ETH",
-    icon: "icon-ETH",
-  });
-  const [num, setNum] = useState(null);
-  const [textAreaValue, setTextAreaVal] = useState("");
-  const [network, setNetwork] = useState(true);
+// 定义公链选项的类型
+interface OptionType {
+  value: string;
+  label: string;
+  icon?: string;
+}
+
+// 定义公链组的类型
+interface GroupType {
+  label: string;
+  children: OptionType[];
+}
+
+const list: GroupType[] = [
+  {
+    label: "EVM",
+    children: [
+      { value: "ETH", label: "ETH", icon: "icon-ETH" },
+      { value: "BSC", label: "BSC", icon: "icon-bnb-bnb-logo" },
+      { value: "Optimism", label: "Optimism", icon: "icon-optimism-ethereum-op-logo" },
+      { value: "Arbitrum", label: "Arbitrum", icon: "icon-arbitrum-arb-logo" },
+      { value: "Polygon", label: "Polygon", icon: "icon-polygon-matic-logo" },
+      { value: "TRX", label: "TRX", icon: "icon-tron-trx-logo" },
+      { value: "AVAX", label: "AVAX", icon: "icon-avalanche-avax-logo" },
+    ],
+  },
+  {
+    label: "SOL",
+    children: [{ value: "SOL", label: "SOL", icon: "icon-solana" }],
+  },
+];
+
+const Wallet: React.FC = () => {
+  const [label, setLabel] = useState<OptionType>({ value: "ETH", label: "ETH", icon: "icon-ETH" });
+  const [num, setNum] = useState<number | null>(null);
+  const [textAreaValue, setTextAreaVal] = useState<string>("");
+  const [network, setNetwork] = useState<boolean>(true);
 
   useEffect(() => {
     const updateNetworkStatus = () => setNetwork(navigator.onLine);
@@ -22,7 +50,6 @@ const Wallet = () => {
     window.addEventListener("online", updateNetworkStatus);
     window.addEventListener("offline", updateNetworkStatus);
 
-    // 初始检查网络状态
     updateNetworkStatus();
 
     return () => {
@@ -42,18 +69,15 @@ const Wallet = () => {
     }
 
     try {
-      switch (label?.value) {
+      switch (label.value) {
         case "SOL":
           const solWalletArr = await createSolWallets(num);
-          const solRes = solWalletArr
-            .map((wallet) => `${wallet.address},${wallet.privateKey}`)
-            .join("\n");
+          const solRes = solWalletArr.map((wallet: { address: string, privateKey: string }) => `${wallet.address},${wallet.privateKey}`).join("\n");
           setTextAreaVal(solRes);
+          break;
         default:
           const evmWalletArr = await createWallets(num);
-          const evmRes = evmWalletArr
-            .map((wallet) => `${wallet.address},${wallet.privateKey}`)
-            .join("\n");
+          const evmRes = evmWalletArr.map((wallet: { address: string, privateKey: string }) => `${wallet.address},${wallet.privateKey}`).join("\n");
           setTextAreaVal(evmRes);
           break;
       }
@@ -62,44 +86,16 @@ const Wallet = () => {
     }
   };
 
-  const onChangeInput = (e) => {
-    setNum(e);
+  const onChangeInput = (e: string) => {
+    setNum(Number(e));
   };
 
-  const onChange = (value) => {
-    const selected = list
-      .flatMap((group) => group.children)
-      .find((option) => option.value === value);
-    setLabel(selected);
+  const onChange = (value: string) => {
+    const selected = list.flatMap(group => group.children).find(option => option.value === value);
+    if (selected) {
+      setLabel(selected);
+    }
   };
-
-  const list = [
-    {
-      label: "EVM",
-      children: [
-        { value: "ETH", label: "ETH", icon: "icon-ETH" },
-        { value: "BSC", label: "BSC", icon: "icon-bnb-bnb-logo" },
-        {
-          value: "Optimism",
-          label: "Optimism",
-          icon: "icon-optimism-ethereum-op-logo",
-        },
-        {
-          value: "Arbitrum",
-          label: "Arbitrum",
-          icon: "icon-arbitrum-arb-logo",
-        },
-        { value: "Polygon", label: "Polygon", icon: "icon-polygon-matic-logo" },
-        { value: "TRX", label: "TRX", icon: "icon-tron-trx-logo" },
-        { value: "AVAX", label: "AVAX", icon: "icon-avalanche-avax-logo" },
-      ],
-    },
-    {
-      label: "SOL",
-      children: [{ value: "SOL", label: "SOL", icon: "icon-solana" }],
-    },
-
-  ];
 
   return (
     <div className="flex flex-col justify-center items-center space-y-12 bg-[#f4f7fa] h-[81vh]">
@@ -115,25 +111,12 @@ const Wallet = () => {
             filter
           >
             {list.map((group, index) => (
-              <Select.OptGroup
-                label={group.label}
-                key={`${index}-${group.label}`}
-              >
+              <Select.OptGroup label={group.label} key={`${index}-${group.label}`}>
                 {group.children.map((option, index2) => (
-                  <Select.Option
-                    value={option.value}
-                    key={`${index2}-${group.label}`}
-                  >
+                  <Select.Option value={option.value} key={`${index2}-${option.value}`}>
                     <div className="flex justify-between items-center w-full">
                       <span>{option.label}</span>
-                      {option.icon && (
-                        <SvgIcon
-                          type={option.icon}
-                          size={24}
-                          className="ml-2"
-                        />
-                        
-                      )}
+                      {option.icon && <SvgIcon type={option.icon} size={24} className="ml-2" />}
                     </div>
                   </Select.Option>
                 ))}
@@ -142,19 +125,12 @@ const Wallet = () => {
           </Select>
           <Input
             onEnterPress={handleClick}
-            value={num}
-            onChange={onChangeInput}
+            value={num !== null ? num.toString() : ''}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onChangeInput(e.target.value)}
             className="w-3/5 mt-5"
             placeholder="请输入你要创建的钱包的数量"
             size="large"
-            suffix={
-              <SvgIcon
-                className={Style.icon}
-                type="icon-youjiantou"
-                size={24}
-                onClick={handleClick}
-              />
-            }
+            suffix={<SvgIcon className={Style.icon} type="icon-youjiantou" size={24} onClick={handleClick} />}
           />
           <div className="text-[#ff4949] bg-[#ffeded] text-xs mt-5 p-3 rounded-md">
             <span>
@@ -163,20 +139,12 @@ const Wallet = () => {
           </div>
           <div className="text-sky-500 mt-2 text-xs ">
             联网状态：
-            {network
-              ? "[已连接]，请断开网络后使用无痕模式，防止钱包私钥泄漏。"
-              : "[已断开],请使用无痕模式，防止钱包私钥泄漏"}
+            {network ? "[已连接]，请断开网络后使用无痕模式，防止钱包私钥泄漏。" : "[已断开],请使用无痕模式，防止钱包私钥泄漏"}
           </div>
         </div>
         <div className={!textAreaValue ? "hidden" : "mt-5"}>
-          <CustomTextArea
-            customStyle="flex w-[60vw] max-h-[212px]"
-            value={textAreaValue}
-            onChange={setTextAreaVal}
-          ></CustomTextArea>
-          <span className="text-sky-500 text-sm">
-            钱包生成完毕：格式【钱包地址】,【私钥】
-          </span>
+          <CustomTextArea customStyle="flex w-[60vw] max-h-[212px]" value={textAreaValue} onChange={setTextAreaVal} />
+          <span className="text-sky-500 text-sm">钱包生成完毕：格式【钱包地址】,【私钥】</span>
         </div>
       </div>
     </div>

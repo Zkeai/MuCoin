@@ -1,17 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 
+// Define the interface for the credentials stored in localStorage
+interface Credentials {
+  apiKey: string;
+  secretKey: string;
+  passphrase?: string;
+}
 
-const useCommon = (exchangeName, requirePassphrase = false) => {
-  const [apiKey, setApiKey] = useState('');
-  const [secretKey, setSecretKey] = useState('');
-  const [passphrase, setPassphrase] = useState(''); // 新增 passphrase 状态
-  const [textAreaValue, setTextareaValue] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [accountInfo, setAccountInfo] = useState([]);
+// Define the interface for the hook's return values
+interface UseCommonReturn {
+  apiKey: string;
+  secretKey: string;
+  passphrase?: string;
+  open: boolean;
+  modalOpen: boolean;
+  setOpenModal: (event: boolean) => void;
+  accountInfo: any[];
+  textAreaValue: string;
+  setTextAreaVal: (event: string) => void;
+  handleApiKeyChange: (event: string) => void;
+  handleSecretKeyChange: (event: string) => void;
+  handlePassphraseChange?: (event: string) => void;
+  handleSwitchChange: (checked: boolean) => void;
+  clearDataHandle: () => void;
+  setAccountInfo: (info: any[]) => void;
+}
+
+const useCommon = (exchangeName: string, requirePassphrase: boolean = false): UseCommonReturn => {
+  const [apiKey, setApiKey] = useState<string>('');
+  const [secretKey, setSecretKey] = useState<string>('');
+  const [passphrase, setPassphrase] = useState<string>(''); // 新增 passphrase 状态
+  const [textAreaValue, setTextareaValue] = useState<string>('');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [accountInfo, setAccountInfo] = useState<any[]>([]);
 
   useEffect(() => {
-    const cexCredentials = JSON.parse(localStorage.getItem('cexInfo'))?.find(credentials => credentials.hasOwnProperty(exchangeName));
+    const storedData = localStorage.getItem('cexInfo');
+    const cexCredentials = storedData ? JSON.parse(storedData).find((credentials: any) => credentials.hasOwnProperty(exchangeName)) : null;
     if (cexCredentials) {
       const { apiKey, secretKey, passphrase } = cexCredentials[exchangeName];
       if (apiKey) setApiKey(apiKey);
@@ -20,38 +46,36 @@ const useCommon = (exchangeName, requirePassphrase = false) => {
     }
   }, [exchangeName]);
 
-  const handleApiKeyChange = (event) => {
+  const handleApiKeyChange = (event: string) => {
     setApiKey(event);
   };
 
-  const handleSecretKeyChange = (event) => {
+  const handleSecretKeyChange = (event: string) => {
     setSecretKey(event);
   };
 
-  const handlePassphraseChange = (event) => { // 新增 handlePassphraseChange
+  const handlePassphraseChange = (event: string) => { // 新增 handlePassphraseChange
     setPassphrase(event);
   };
 
-  const handleSwitchChange = (checked) => {
+  const handleSwitchChange = (checked: boolean) => {
     setOpen(checked);
   };
 
   const clearDataHandle = () => {
-    localStorage.clear("cexInfo");
+    localStorage.removeItem("cexInfo");
     setApiKey('');
     setSecretKey('');
     setPassphrase(''); // 清除 passphrase
   };
 
-  const setOpenModal = (event) => {
+  const setOpenModal = (event: boolean) => {
     setModalOpen(event);
   };
 
-  const setTextAreaVal = (event) => {
+  const setTextAreaVal = (event: string) => {
     setTextareaValue(event);
   };
-
-
 
   return {
     apiKey,

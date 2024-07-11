@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
-import useBitgetComponent from '/src/hooks/cex/useBitgetComponent'; 
+import useBitgetComponent from '/src/hooks/cex/useBitgetComponent';
 import CustomTextArea from '/src/components/custom/CustomTextArea';
 import Modal from '/src/components/cex/Modal';
 import Icon from '/src/components/custom/Icon';
@@ -9,7 +9,23 @@ import Styles from '../cex.module.css';
 
 import { bitgetWithDrawa } from '/src/http/api/cex/bitget/api';
 
-const BitgetComponent = () => {
+// 定义网络列表的类型
+interface Network {
+  chain: string;
+  withdrawFee: string;
+  minWithdrawAmount: string;
+  withdrawable: boolean;
+}
+
+// 定义币种信息的类型
+interface CoinInfo {
+  coin: string;
+  available: string;
+  locked: string;
+  frozen: string;
+}
+
+const BitgetComponent: React.FC = () => {
   const {
     apiKey,
     secretKey,
@@ -32,17 +48,17 @@ const BitgetComponent = () => {
     setSelectedCoin
   } = useBitgetComponent();
 
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [drawSuccess, setDrawSuccess] = useState(null);
-  const [drawFail, setDrawFail] = useState(null);
-  const [minFee, setMinFee] = useState("0");
+  const [activeIndex, setActiveIndex] = useState<string | null>(null);
+  const [drawSuccess, setDrawSuccess] = useState<string | null>(null);
+  const [drawFail, setDrawFail] = useState<string | null>(null);
+  const [minFee, setMinFee] = useState<string>("0");
 
-  const handleClick = (index, fee) => {
+  const handleClick = (index: string, fee: string) => {
     setMinFee(fee);
     setActiveIndex(index); 
   };
 
-  const handleCoinChange = useCallback((value) => {
+  const handleCoinChange = useCallback((value: string) => {
     setSelectedCoin(value);
   }, [setSelectedCoin]);
 
@@ -116,7 +132,7 @@ const BitgetComponent = () => {
             position='topLeft'
           >
             <div className="cursor-help">
-              <Icon type="icon-yihuo" sizq={2} />
+              <Icon type="icon-yihuo" size={2} />
             </div>
           </Tooltip>
         </div>
@@ -147,7 +163,7 @@ const BitgetComponent = () => {
               header={<div>现货账户信息</div>}
               bordered
               dataSource={accountInfo}
-              renderItem={(item) => (
+              renderItem={(item: CoinInfo) => (
                 <List.Item key={item.coin}>
                   {item.coin}: {`[可用] ${item.available} ---- [锁定] ${item.locked} ---- [冻结] ${item.frozen}`}
                 </List.Item>
@@ -170,7 +186,7 @@ const BitgetComponent = () => {
             <div>
               {networkList.length > 0 && (
                 <ul className="grid grid-cols-2 gap-6">
-                  {networkList.map(network => (
+                  {networkList.map((network: Network) => (
                     <li key={network.chain}>
                       <div
                         className={`flex space-x-1 w-[17vw]  rounded-lg pl-2 pt-1
@@ -181,7 +197,7 @@ const BitgetComponent = () => {
                           <span>{network.chain}</span>
                           <span>手续费：{network.withdrawFee} {selectedCoin}</span>
                           <span>最小提取金额：{network.minWithdrawAmount} {selectedCoin}</span>
-                          <span>是否可以提现：{network.withdrawable}</span>
+                          <span>是否可以提现：{network.withdrawable ? '是' : '否'}</span>
                         </div>
                       </div>
                     </li>

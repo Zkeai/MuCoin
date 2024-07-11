@@ -1,20 +1,33 @@
-'use client';
-import { useEffect, useState, useCallback } from 'react';
+'use client'
+import { useEffect, useState } from 'react';
 import { Button, Table, Select, Notification, Spin } from '@douyinfe/semi-ui';
-import networks from '/src/config/rpc.json';
 import { IconCopyStroked, IconRedoStroked } from '@douyinfe/semi-icons';
+import networks from '/src/config/rpc.json';
 
-const RpcTest = () => {
-  const [results, setResults] = useState<{ [key: string]: number | string | null }>({});
+interface Network {
+  name: string;
+  rpcs: string[];
+}
+
+interface Result {
+  url: string;
+  time: number | string;
+}
+
+const RpcTest: React.FC = () => {
+  const [results, setResults] = useState<{ [key: string]: number | string }>({});
   const [selectedNetwork, setSelectedNetwork] = useState<string>(networks[0]?.name || '');
 
-  const testRpc = async (url: string) => {
+  useEffect(() => {
+    if (selectedNetwork) {
+      handleTest();
+    }
+  }, [selectedNetwork]);
+
+  const testRpc = async (url: string): Promise<number | string> => {
     const start = performance.now();
     try {
-      const res = await fetch(url, { 
-        method: 'POST', 
-        body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }) 
-      });
+      const res = await fetch(url, { method: 'POST', body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }) });
       if (res.status !== 200) {
         return "error";
       }
@@ -25,30 +38,22 @@ const RpcTest = () => {
     }
   };
 
-  const handleTest = useCallback(async () => {
+  const handleTest = async () => {
     if (!selectedNetwork) return;
 
-    const network = networks.find(n => n.name === selectedNetwork);
+    const network = networks.find((n: Network) => n.name === selectedNetwork);
     if (network) {
-      setResults(network.rpcs.reduce((acc, url) => ({ ...acc, [url]: null }), {}));
-
-      const promises = network.rpcs.map(url => testRpc(url).then(time => ({ url, time })));
+      const promises = network.rpcs.map((url: string) => testRpc(url).then(time => ({ url, time })));
       const resultsArray = await Promise.all(promises);
 
       const newResults = resultsArray.reduce((acc, result) => {
         acc[result.url] = result.time;
         return acc;
-      }, {});
+      }, {} as { [key: string]: number | string });
 
       setResults(newResults);
     }
-  }, [selectedNetwork]);
-
-  useEffect(() => {
-    if (selectedNetwork) {
-      handleTest();
-    }
-  }, [selectedNetwork, handleTest]);
+  };
 
   const handleNetworkChange = (value: string) => {
     setSelectedNetwork(value);
@@ -66,8 +71,8 @@ const RpcTest = () => {
 
   const columns = [
     { title: 'RPC', dataIndex: 'url', key: 'url' },
-    { title: '响应时间 (ms)', dataIndex: 'time', key: 'time', render: (text) => (text === "error" ? 'Error' : text !== null ? text.toFixed(2) : <Spin size="small" />) },
-    { title: '', key: 'actions', render: (text, record) => (
+    { title: '响应时间 (ms)', dataIndex: 'time', key: 'time' },
+    { title: '', key: 'actions', render: (text: any, record: Result) => (
         <Button size='small' icon={<IconCopyStroked />} theme='outline' type='secondary' onClick={() => copyToClipboard(record.url)}>复制</Button>
       )
     }
@@ -75,11 +80,13 @@ const RpcTest = () => {
 
   const data = selectedNetwork
     ? networks
-        .find(network => network.name === selectedNetwork)
-        ?.rpcs.map(url => ({
+        .find((network: Network) => network.name === selectedNetwork)
+        ?.rpcs.map((url: string) => ({
           network: selectedNetwork,
           url,
-          time: results[url],
+          time: results[url] !== undefined
+            ? (results[url] !== "error" ? (results[url] as number).toFixed(2) : 'Error')
+            : <Spin size="small" />,
         })) || []
     : [];
 
@@ -90,7 +97,7 @@ const RpcTest = () => {
         style={{ width: 400 }}
         value={selectedNetwork}
         onChange={handleNetworkChange}
-        optionList={networks.map(network => ({ value: network.name, label: network.name }))}
+        optionList={networks.map((network: Network) => ({ value: network.name, label: network.name }))}
       />
       <Button icon={<IconRedoStroked />} type='secondary' theme='solid' onClick={handleTest} disabled={!selectedNetwork} className="ml-4 ">
         重新测速

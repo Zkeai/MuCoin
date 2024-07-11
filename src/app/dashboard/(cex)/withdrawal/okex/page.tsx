@@ -1,14 +1,21 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
-import useOkexComponent from '/src/hooks/cex/useOkexComponent'; 
+import useOkexComponent from '/src/hooks/cex/useOkexComponent';
 import CustomTextArea from '/src/components/custom/CustomTextArea';
 import Modal from '/src/components/cex/Modal';
 import Icon from '/src/components/custom/Icon';
 import Styles from '../cex.module.css';
 import { okexWithdrawal } from '/src/http/api/cex/okex/api';
 
-const OkexComponent = () => {
+interface Network {
+  chain: string;
+  minFee: string;
+  ccy: string;
+  minWd: string;
+}
+
+const OkexComponent: React.FC = () => {
   const {
     apiKey,
     secretKey,
@@ -31,17 +38,17 @@ const OkexComponent = () => {
     setSelectedCoin
   } = useOkexComponent();
 
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [drawSuccess, setDrawSuccess] = useState(null);
-  const [drawFail, setDrawFail] = useState(null);
-  const [minFee, setMinFee] = useState("0");
+  const [activeIndex, setActiveIndex] = useState<string | null>(null);
+  const [drawSuccess, setDrawSuccess] = useState<string | null>(null);
+  const [drawFail, setDrawFail] = useState<string | null>(null);
+  const [minFee, setMinFee] = useState<string>("0");
 
-  const handleClick = (index, fee) => {
+  const handleClick = (index: string, fee: string) => {
     setMinFee(fee);
-    setActiveIndex(index); 
+    setActiveIndex(index);
   };
 
-  const handleCoinChange = useCallback((value) => {
+  const handleCoinChange = useCallback((value: string) => {
     setSelectedCoin(value);
   }, [setSelectedCoin]);
 
