@@ -5,6 +5,18 @@
     "icon": "icon-shouye"
   },
   {
+    "itemKey": "drop",
+    "text": "撸毛",
+    "icon": "icon-a-scskongtou",
+    "items": [
+      {
+        "itemKey": "drop/newland",
+        "text": "Newland",
+        "icon": "icon-LOGO_3"
+      }
+    ]
+  },
+  {
     "itemKey": "withdrawal",
     "text": "交易所提币",
     "icon": "icon-jiaoyisuo",

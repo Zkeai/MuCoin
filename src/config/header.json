@@ -5,6 +5,24 @@
       "name": "head",
       "item": [
         {
+          "name": "撸毛",
+          "item": [
+            {
+              "name": "测试网",
+              "icon": "icon-ceshiwangluozi",
+              "item": [
+                {
+                  "name": "newland",
+                  "icon": "icon-LOGO_3",
+                  "click": true,
+                  "path": "/dashboard/drop/newland",
+                  "item": []
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "监控",
           "item": [
             {
