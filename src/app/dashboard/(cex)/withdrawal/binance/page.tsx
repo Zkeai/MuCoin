@@ -1,5 +1,5 @@
 'use client';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
 import useBinanceComponent from '/src/hooks/cex/useBinanceAccountinfo.ts'; 
 import CustomTextArea from '/src/components/custom/CustomTextArea';
@@ -36,15 +36,15 @@ const BinanceComponent = () => {
     setActiveIndex(index); 
   };
 
+  const handleCoinChange = useCallback((value) => {
+    setSelectedCoin(value);
+  }, []);
+
   useEffect(() => {
     if (coins.length > 0) {
       handleCoinChange(coins[0]);
     }
-  }, [coins]);
-
-  const handleCoinChange = (value) => {
-    setSelectedCoin(value);
-  };
+  }, [coins, handleCoinChange]);
 
   const withDrawalHandle = async () => {
     let successDraw = "";

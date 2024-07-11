@@ -50,4 +50,5 @@ class HttpService {
   // 其他 HTTP 方法也可以类似封装
 }
 
-export default new HttpService();
+const httpServiceInstance = new HttpService();
+export default httpServiceInstance;

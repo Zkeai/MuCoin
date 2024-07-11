@@ -1,23 +1,20 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
+import { useEffect, useState, useCallback } from 'react';
 import { Button, Table, Select, Notification, Spin } from '@douyinfe/semi-ui';
 import networks from '/src/config/rpc.json';
 import { IconCopyStroked, IconRedoStroked } from '@douyinfe/semi-icons';
 
 const RpcTest = () => {
-  const [results, setResults] = useState<{ [key: string]: number | null }>({});
-  const [selectedNetwork, setSelectedNetwork] = useState<string>(networks[0]?.name || null);
-
-  useEffect(() => {
-    if (selectedNetwork) {
-      handleTest();
-    }
-  }, [selectedNetwork]);
+  const [results, setResults] = useState<{ [key: string]: number | string | null }>({});
+  const [selectedNetwork, setSelectedNetwork] = useState<string>(networks[0]?.name || '');
 
   const testRpc = async (url: string) => {
     const start = performance.now();
     try {
-      const res = await fetch(url, { method: 'POST', body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }) });
+      const res = await fetch(url, { 
+        method: 'POST', 
+        body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }) 
+      });
       if (res.status !== 200) {
         return "error";
       }
@@ -28,11 +25,13 @@ const RpcTest = () => {
     }
   };
 
-  const handleTest = async () => {
+  const handleTest = useCallback(async () => {
     if (!selectedNetwork) return;
 
     const network = networks.find(n => n.name === selectedNetwork);
     if (network) {
+      setResults(network.rpcs.reduce((acc, url) => ({ ...acc, [url]: null }), {}));
+
       const promises = network.rpcs.map(url => testRpc(url).then(time => ({ url, time })));
       const resultsArray = await Promise.all(promises);
 
@@ -43,7 +42,13 @@ const RpcTest = () => {
 
       setResults(newResults);
     }
-  };
+  }, [selectedNetwork]);
+
+  useEffect(() => {
+    if (selectedNetwork) {
+      handleTest();
+    }
+  }, [selectedNetwork, handleTest]);
 
   const handleNetworkChange = (value: string) => {
     setSelectedNetwork(value);
@@ -61,7 +66,7 @@ const RpcTest = () => {
 
   const columns = [
     { title: 'RPC', dataIndex: 'url', key: 'url' },
-    { title: '响应时间 (ms)', dataIndex: 'time', key: 'time' },
+    { title: '响应时间 (ms)', dataIndex: 'time', key: 'time', render: (text) => (text === "error" ? 'Error' : text !== null ? text.toFixed(2) : <Spin size="small" />) },
     { title: '', key: 'actions', render: (text, record) => (
         <Button size='small' icon={<IconCopyStroked />} theme='outline' type='secondary' onClick={() => copyToClipboard(record.url)}>复制</Button>
       )
@@ -74,9 +79,7 @@ const RpcTest = () => {
         ?.rpcs.map(url => ({
           network: selectedNetwork,
           url,
-          time: results[url] !== undefined
-            ? (results[url] !== "error" ? results[url].toFixed(2) : 'Error')
-            : <Spin size="small" />,
+          time: results[url],
         })) || []
     : [];
 

@@ -1,5 +1,5 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+'use client';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
 import useBitgetComponent from '/src/hooks/cex/useBitgetComponent'; 
 import CustomTextArea from '/src/components/custom/CustomTextArea';
@@ -32,27 +32,25 @@ const BitgetComponent = () => {
     setSelectedCoin
   } = useBitgetComponent();
 
-  
   const [activeIndex, setActiveIndex] = useState(null);
   const [drawSuccess, setDrawSuccess] = useState(null);
   const [drawFail, setDrawFail] = useState(null);
-  const [minFee, setMinFee] = useState("0")
+  const [minFee, setMinFee] = useState("0");
 
-  const handleClick = (index,fee) => {
-    setMinFee(fee)
+  const handleClick = (index, fee) => {
+    setMinFee(fee);
     setActiveIndex(index); 
   };
+
+  const handleCoinChange = useCallback((value) => {
+    setSelectedCoin(value);
+  }, [setSelectedCoin]);
 
   useEffect(() => {
     if (coins.length > 0) {
       handleCoinChange(coins[0]);
     }
-  }, [coins]);
-
-  const handleCoinChange = (value) => {
-    
-    setSelectedCoin(value);
-  };
+  }, [coins, handleCoinChange]);
 
   const withDrawalHandle = async () => {
     let successDraw = "";
@@ -73,10 +71,8 @@ const BitgetComponent = () => {
         const coin = selectedCoin;
         const chain = activeIndex;
         await bitgetWithDrawa({ apiKey, secretKey, passphrase, coin, address, amount, chain });
-
         successDraw += `${address} > 提币成功\n`;
       } catch (error) {
-       
         failDraw += `${address} > 提币失败 > ${error}\n`;
       }
     }
@@ -179,14 +175,13 @@ const BitgetComponent = () => {
                       <div
                         className={`flex space-x-1 w-[17vw]  rounded-lg pl-2 pt-1
                           ${Styles.netw} ${activeIndex === network.chain ? Styles.active : ''}`}
-                        onClick={() => handleClick(network.chain,network.withdrawFee)}
+                        onClick={() => handleClick(network.chain, network.withdrawFee)}
                       >
                         <div className="flex flex-col space-y-1 text-xs">
                           <span>{network.chain}</span>
                           <span>手续费：{network.withdrawFee} {selectedCoin}</span>
                           <span>最小提取金额：{network.minWithdrawAmount} {selectedCoin}</span>
                           <span>是否可以提现：{network.withdrawable}</span>
-                          
                         </div>
                       </div>
                     </li>

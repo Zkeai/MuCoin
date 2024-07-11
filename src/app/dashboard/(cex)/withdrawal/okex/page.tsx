@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
 import useOkexComponent from '/src/hooks/cex/useOkexComponent'; 
 import CustomTextArea from '/src/components/custom/CustomTextArea';
@@ -31,27 +31,25 @@ const OkexComponent = () => {
     setSelectedCoin
   } = useOkexComponent();
 
-  
   const [activeIndex, setActiveIndex] = useState(null);
   const [drawSuccess, setDrawSuccess] = useState(null);
   const [drawFail, setDrawFail] = useState(null);
-  const [minFee, setMinFee] = useState("0")
+  const [minFee, setMinFee] = useState("0");
 
-  const handleClick = (index,fee) => {
-    setMinFee(fee)
+  const handleClick = (index, fee) => {
+    setMinFee(fee);
     setActiveIndex(index); 
   };
+
+  const handleCoinChange = useCallback((value) => {
+    setSelectedCoin(value);
+  }, [setSelectedCoin]);
 
   useEffect(() => {
     if (coins.length > 0) {
       handleCoinChange(coins[0]);
     }
-  }, [coins]);
-
-  const handleCoinChange = (value) => {
-    
-    setSelectedCoin(value);
-  };
+  }, [coins, handleCoinChange]);
 
   const withDrawalHandle = async () => {
     let successDraw = "";
@@ -71,10 +69,9 @@ const OkexComponent = () => {
       try {
         const coin = selectedCoin;
         const network = activeIndex;
-        await okexWithdrawal({ apiKey, secretKey, passphrase, coin, address, amount, network,minFee });
+        await okexWithdrawal({ apiKey, secretKey, passphrase, coin, address, amount, network, minFee });
         successDraw += `${address} > 提币成功\n`;
       } catch (error) {
-       
         failDraw += `${address} > 提币失败 > ${error}\n`;
       }
     }
@@ -177,7 +174,7 @@ const OkexComponent = () => {
                       <div
                         className={`flex space-x-1 w-[17vw] h-16 rounded-lg pl-2 pt-1
                           ${Styles.netw} ${activeIndex === network.chain ? Styles.active : ''}`}
-                        onClick={() => handleClick(network.chain,network.minFee)}
+                        onClick={() => handleClick(network.chain, network.minFee)}
                       >
                         <div className="flex flex-col space-y-1 text-xs">
                           <span>{network.chain}</span>
