@@ -182,11 +182,7 @@ const UploadComponent = ({ title, fileContent, setFileContent }) => {
               下载文件
             </Button>
       </div>
-      {fileContent && !isManualInput && (
-        <div className="mt-4 p-2 border rounded">
-          <pre>{fileContent}</pre>
-        </div>
-      )}
+
     </div>
   );
 };

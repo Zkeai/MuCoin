@@ -7,6 +7,7 @@ class HttpService {
 
   constructor() {
     this.http = axios.create({
+      withCredentials: true,
       baseURL: '/api', // 你的 API 基础 URL
       timeout: 10000, // 请求超时时间
       headers: {

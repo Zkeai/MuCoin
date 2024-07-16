@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { Select, Input, Toast } from "@douyinfe/semi-ui";
+import { Select, Input, Toast, Switch, Title } from "@douyinfe/semi-ui";
 import SvgIcon from "/src/components/custom/Icon";
 import Style from "../wallet.module.css";
 import { createWallets, createSolWallets } from "/src/lib/wallet.ts";
@@ -43,6 +43,7 @@ const Wallet: React.FC = () => {
   const [num, setNum] = useState<number | null>(null);
   const [textAreaValue, setTextAreaVal] = useState<string>("");
   const [network, setNetwork] = useState<boolean>(true);
+  const [generatePrivateKeyOnly, setGeneratePrivateKeyOnly] = useState<boolean>(false);
 
   useEffect(() => {
     const updateNetworkStatus = () => setNetwork(navigator.onLine);
@@ -71,14 +72,26 @@ const Wallet: React.FC = () => {
     try {
       switch (label.value) {
         case "SOL":
-          const solWalletArr = await createSolWallets(num);
-          const solRes = solWalletArr.map((wallet: { address: string, privateKey: string }) => `${wallet.address},${wallet.privateKey}`).join("\n");
-          setTextAreaVal(solRes);
+          if (generatePrivateKeyOnly) {
+            const solWalletArr = await createSolWallets(num);
+            const solRes = solWalletArr.map((wallet: { privateKey: string }) => `${wallet.privateKey}`).join("\n");
+            setTextAreaVal(solRes);
+          } else {
+            const solWalletArr = await createSolWallets(num);
+            const solRes = solWalletArr.map((wallet: { address: string, privateKey: string }) => `${wallet.address},${wallet.privateKey}`).join("\n");
+            setTextAreaVal(solRes);
+          }
           break;
         default:
-          const evmWalletArr = await createWallets(num);
-          const evmRes = evmWalletArr.map((wallet: { address: string, privateKey: string }) => `${wallet.address},${wallet.privateKey}`).join("\n");
-          setTextAreaVal(evmRes);
+          if (generatePrivateKeyOnly) {
+            const evmWalletArr = await createWallets(num);
+            const evmRes = evmWalletArr.map((wallet: { privateKey: string }) => `${wallet.privateKey}`).join("\n");
+            setTextAreaVal(evmRes);
+          } else {
+            const evmWalletArr = await createWallets(num);
+            const evmRes = evmWalletArr.map((wallet: { address: string, privateKey: string }) => `${wallet.address},${wallet.privateKey}`).join("\n");
+            setTextAreaVal(evmRes);
+          }
           break;
       }
     } catch (error) {
@@ -126,7 +139,7 @@ const Wallet: React.FC = () => {
           <Input
             onEnterPress={handleClick}
             value={num !== null ? num.toString() : ''}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => onChangeInput(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onChangeInput(e)}
             className="w-3/5 mt-5"
             placeholder="请输入你要创建的钱包的数量"
             size="large"
@@ -137,9 +150,20 @@ const Wallet: React.FC = () => {
               提示:钱包生成过程均在本地环境完成，我们无法获取到钱包的任何信息！此Dapp在本地运行，为了安全，请断开网络并在无痕浏览器上执行此Dapp！此Dapp生成的钱包仅供测试使用，勿用于存放大额资金！
             </span>
           </div>
-          <div className="text-sky-500 mt-2 text-xs ">
-            联网状态：
-            {network ? "[已连接]，请断开网络后使用无痕模式，防止钱包私钥泄漏。" : "[已断开],请使用无痕模式，防止钱包私钥泄漏"}
+          <div className="text-sky-500 mt-2 text-xs flex justify-between">
+            <div>
+              联网状态：
+              {network ? "[已连接]，请断开网络后使用无痕模式，防止钱包私钥泄漏。" : "[已断开],请使用无痕模式，防止钱包私钥泄漏"}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+
+                <span>{generatePrivateKeyOnly ? '私钥模式' : '私钥地址模式'}</span>
+
+              <Switch
+                checked={generatePrivateKeyOnly}
+                onChange={(checked: boolean) => setGeneratePrivateKeyOnly(checked)}
+              />
+            </div>
           </div>
         </div>
         <div className={!textAreaValue ? "hidden" : "mt-5"}>
