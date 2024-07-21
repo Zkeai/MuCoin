@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { Toast } from '@douyinfe/semi-ui';
 import useCommon from './useCommon';
-import { getBitgetAccountInfo, bitgetNetworkList, bitgetWithDrawa } from '@/http/api/cex/bitget/api';
+import { getBitgetAccountInfo, bitgetNetworkList } from '@/http/api/cex/bitget/api';
 
-// 定义网络链类型
 interface NetworkChain {
   chain: string;
   withdrawFee: string;
@@ -11,12 +10,11 @@ interface NetworkChain {
   withdrawable: boolean;
 }
 
-// 定义网络列表类型
 interface Network {
+  coin: string;
   chains: NetworkChain[];
 }
 
-// 定义币种信息类型
 interface AccountInfo {
   coin: string;
   available: string;
@@ -24,7 +22,6 @@ interface AccountInfo {
   frozen: string;
 }
 
-// 定义接口用于描述 localStorage 中的对象
 interface CexInfo {
   bitget?: {
     apiKey: string;
@@ -33,7 +30,6 @@ interface CexInfo {
   };
 }
 
-// 定义 hook 返回的对象
 interface UseCommon {
   apiKey: string;
   secretKey: string;
@@ -52,18 +48,18 @@ interface UseCommon {
   setAccountInfo: (info: AccountInfo[]) => void;
 }
 
-// 定义 bitget 的接口
-interface BitgetWithDrawal {
+interface BitgetCommonQuery {
   apiKey: string;
   secretKey: string;
   passphrase: string;
-  coin: string;
-  chain: string;
-  amount: string;
-  address: string;
+  coin?: string; // 添加 coin 属性，假设它是可选的
 }
 
 const useBitgetComponent = () => {
+  const filterData = useCallback((data: Network[], coin: string) => {
+    return data.filter(item => coin === item.coin);
+  }, []);
+
   const {
     apiKey,
     secretKey,
@@ -85,15 +81,6 @@ const useBitgetComponent = () => {
   const [coins, setCoins] = useState<string[]>([]);
   const [networkList, setNetworkList] = useState<NetworkChain[]>([]);
   const [selectedCoin, setSelectedCoin] = useState<string>("");
-  const [activeIndex, setActiveIndex] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
-
-  const filterData = useCallback((data: Network[], coins: string[]) => {
-    return data
-      .flatMap(network => network.chains) // 获取所有的 NetworkChain
-      .filter(chain => coins.includes(chain.chain)); // 按 chain 过滤
-  }, []);
 
   const changeCoins = (data: AccountInfo[]) => {
     const ccy = data.map(item => item.coin);
@@ -109,21 +96,18 @@ const useBitgetComponent = () => {
 
     try {
       const response = await getBitgetAccountInfo({ apiKey, secretKey, passphrase });
-      setAccountInfo(response.data); // 这里的 response.data 应该是 AccountInfo[]
-      changeCoins(response.data);
+      setAccountInfo(response.data.data);
+      changeCoins(response.data.data);
 
       if (open) {
         let oldData = localStorage.getItem("cexInfo");
         if (!oldData) {
           oldData = "[]";
         }
-
-        // 明确解析为 CexInfo[]
         let jsonArray: CexInfo[] = JSON.parse(oldData);
 
         const credentials: CexInfo = { bitget: { apiKey, secretKey, passphrase } };
-        const index = jsonArray.findIndex((item: CexInfo) => item.bitget);
-
+        const index = jsonArray.findIndex(item => item.bitget);
         if (index !== -1) {
           jsonArray[index] = credentials;
         } else {
@@ -145,9 +129,9 @@ const useBitgetComponent = () => {
     }
 
     try {
-      const response = await bitgetNetworkList({ apiKey, secretKey, passphrase });
-      const networklist = filterData(response.data, [selectedCoin]);
-      setNetworkList(networklist.length > 0 ? networklist : []);
+      const response = await bitgetNetworkList({ apiKey, secretKey, passphrase, coin: value } as BitgetCommonQuery);
+      const networklist = filterData(response.data.data, selectedCoin);
+      setNetworkList(networklist.length > 0 ? networklist[0].chains : []);
     } catch (error) {
       Toast.error('获取失败');
     }
@@ -158,26 +142,6 @@ const useBitgetComponent = () => {
       fetchNetworkList(selectedCoin);
     }
   }, [selectedCoin, coins, fetchNetworkList]);
-
-  const performWithdrawal = async () => {
-    const coin: string = selectedCoin || '';
-    const chain: string = activeIndex || '';
-    const addressValue: string = address || '';
-    const amountValue: string = amount || '';
-
-    if (!apiKey || !secretKey || !passphrase || !coin || !chain || !addressValue || !amountValue) {
-      Toast.error('所有必填字段必须填写');
-      return;
-    }
-
-    try {
-      await bitgetWithDrawa({ apiKey, secretKey, passphrase, coin, address: addressValue, amount: amountValue, chain });
-      Toast.success('提现成功');
-    } catch (error) {
-      console.error('执行提现时出错:', error);
-      Toast.error('执行提现时出错');
-    }
-  };
 
   return {
     apiKey,
@@ -199,9 +163,8 @@ const useBitgetComponent = () => {
     coins,
     selectedCoin,
     setSelectedCoin,
-    fetchNetworkList,
-    performWithdrawal
-    };
-    };
-    
-    export default useBitgetComponent;
+    fetchNetworkList
+  };
+};
+
+export default useBitgetComponent;

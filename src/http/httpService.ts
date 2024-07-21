@@ -38,12 +38,12 @@ class HttpService {
     );
   }
 
-  public get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.http.get<T>(url, config).then(response => response.data);
+  public get<T>(url: string, config?: AxiosRequestConfig): Promise<any> {
+    return this.http.get<T>(url, config).then(response => response);
   }
 
-  public post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    return this.http.post<T>(url, data, config).then(response => response.data);
+  public post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<any> {
+    return this.http.post<T>(url, data, config).then(response => response);
   }
 
   // 其他 HTTP 方法也可以类似封装

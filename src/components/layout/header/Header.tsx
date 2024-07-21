@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Icon from '@/components/custom/Icon';
 import Style from '@/components/components.module.css';
 import { Popover } from '@douyinfe/semi-ui';
@@ -9,23 +10,24 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import JSonData from '@/config/header.json';
 
-// Define types for sub-menu items
 interface SubMenuItem {
   name: string;
   path?: string;
   click?: boolean;
   icon?: string;
-  item?: SubMenuItem[];
+  item: SubMenuItem[];
 }
 
-// Define types for the menu structure
 interface MenuItem {
   name: string;
+  path?: string;
+  click?: boolean;
   icon?: string;
-  item?: SubMenuItem[];
+  item: SubMenuItem[];
 }
 
-// Function to render sub-menu
+
+
 const renderSubMenu = (items: SubMenuItem[]) => {
   return (
     <ul className="flex space-x-10 min-w-[200px] w-auto py-8 px-8">
@@ -33,7 +35,7 @@ const renderSubMenu = (items: SubMenuItem[]) => {
         {items.map((subItem, index) => (
           <li key={index} className="mr-4 min-w-[100px]">
             <div className="flex items-center space-x-2 text-black cursor-default pl-4 font-bold">
-              <Icon type={subItem.icon || ''} size={20} color="blue" />
+              {subItem.icon && <Icon type={subItem.icon} size={20} color="blue" />}
               <span>{subItem.name}</span>
             </div>
             {subItem.item && subItem.item.length > 0 && (
@@ -54,9 +56,8 @@ const renderSubMenu = (items: SubMenuItem[]) => {
 
 const Header: React.FC = () => {
   const router = useRouter();
-  const [menu, setMenu] = useState<MenuItem[]>(JSonData.item || []);
+  const [menu, setMenu] = useState(JSonData.item[0].item as MenuItem[]);
   const { address, isConnected } = useAccount();
-
   const titleClickHandle = () => {
     router.push('/');
   };
@@ -75,7 +76,7 @@ const Header: React.FC = () => {
           <ul className="flex space-x-8">
             {menu.map((menuItem, index) => (
               <li key={index} className="relative group">
-                <Popover spacing={15} content={renderSubMenu(menuItem.item || [])}>
+                <Popover spacing={15} content={renderSubMenu(menuItem.item)}>
                   <button className="flex items-center px-2 py-1 rounded-lg text-lg hover:bg-amber-500 hover:text-white">
                     {menuItem.icon && <span className={`iconfont ${menuItem.icon} mr-2`}></span>}
                     {menuItem.name}

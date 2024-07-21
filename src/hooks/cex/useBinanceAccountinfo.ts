@@ -49,7 +49,6 @@ const useBinanceComponent = () => {
       const networkData: NetworkList = res.data; // Ensure the response data matches NetworkList type
       setNetworkList(networkData);
     } catch (error) {
-      console.error('获取网络列表出错:', error);
       Toast.error('获取网络列表出错');
     }
   };
