@@ -13,6 +13,11 @@
         "itemKey": "drop/newland",
         "text": "Newland",
         "icon": "icon-LOGO_3"
+      },
+      {
+        "itemKey": "drop/caduceus",
+        "text": "Caduceus",
+        "icon": "icon-LOGO_3"
       }
     ]
   },

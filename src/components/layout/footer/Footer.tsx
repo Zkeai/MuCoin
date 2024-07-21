@@ -15,9 +15,9 @@ interface SocialUrl {
 const socialUrl: SocialUrl = {
     github:'https://github.com/zkeai',
     youtube:'https://www.youtube.com/channel/UClhZUsoeyNF5kDZ-OO4y0sw',
-    twitter:'https://x.com/lemox66',
+    twitter:'https://x.com/muyu_eth',
     dianbao:'https://t.me/+E3Q1hMARTfozNjQ1',
-    discord:'https://discord.gg/TUAP6N3C'
+    discord:'https://discord.gg/ZDtxG247RE'
 }
 const Footer: React.FC = () => {
 
