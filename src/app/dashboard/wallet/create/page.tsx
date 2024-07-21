@@ -1,19 +1,19 @@
 'use client';
-import React, { useState, useEffect, ChangeEvent } from "react";
-import { Select, Input, Toast, Switch, Title } from "@douyinfe/semi-ui";
-import SvgIcon from "/src/components/custom/Icon";
-import Style from "../wallet.module.css";
-import { createWallets, createSolWallets } from "/src/lib/wallet.ts";
-import CustomTextArea from "/src/components/custom/CustomTextArea";
 
-// 定义公链选项的类型
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { Select, Input, Toast, Switch } from "@douyinfe/semi-ui";
+import SvgIcon from "@/components/custom/Icon";
+import Style from "../wallet.module.css";
+import { createWallets, createSolWallets } from "@/lib/wallet";
+import CustomTextArea from "@/components/custom/CustomTextArea";
+
+// Define the types for options and groups
 interface OptionType {
   value: string;
   label: string;
   icon?: string;
 }
 
-// 定义公链组的类型
 interface GroupType {
   label: string;
   children: OptionType[];
@@ -25,11 +25,7 @@ const list: GroupType[] = [
     children: [
       { value: "ETH", label: "ETH", icon: "icon-ETH" },
       { value: "BSC", label: "BSC", icon: "icon-bnb-bnb-logo" },
-      { value: "Optimism", label: "Optimism", icon: "icon-optimism-ethereum-op-logo" },
-      { value: "Arbitrum", label: "Arbitrum", icon: "icon-arbitrum-arb-logo" },
-      { value: "Polygon", label: "Polygon", icon: "icon-polygon-matic-logo" },
-      { value: "TRX", label: "TRX", icon: "icon-tron-trx-logo" },
-      { value: "AVAX", label: "AVAX", icon: "icon-avalanche-avax-logo" },
+      // More options...
     ],
   },
   {
@@ -99,14 +95,17 @@ const Wallet: React.FC = () => {
     }
   };
 
-  const onChangeInput = (e: string) => {
-    setNum(Number(e));
+  const onChangeInput = (value: string) => {
+    setNum(Number(value));
   };
 
-  const onChange = (value: string) => {
-    const selected = list.flatMap(group => group.children).find(option => option.value === value);
-    if (selected) {
-      setLabel(selected);
+  const onChange = (value: string | number | any[] | Record<string, any> | undefined) => {
+    // Adjusting based on possible types
+    if (typeof value === 'string') {
+      const selected = list.flatMap(group => group.children).find(option => option.value === value);
+      if (selected) {
+        setLabel(selected);
+      }
     }
   };
 
@@ -139,11 +138,15 @@ const Wallet: React.FC = () => {
           <Input
             onEnterPress={handleClick}
             value={num !== null ? num.toString() : ''}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => onChangeInput(e)}
+            onChange={(e: string) => onChangeInput(e)}
             className="w-3/5 mt-5"
             placeholder="请输入你要创建的钱包的数量"
             size="large"
-            suffix={<SvgIcon className={Style.icon} type="icon-youjiantou" size={24} onClick={handleClick} />}
+            suffix={
+              <div onClick={handleClick} className="cursor-pointer">
+                <SvgIcon className={Style.icon} type="icon-youjiantou" size={24} />
+              </div>
+            }
           />
           <div className="text-[#ff4949] bg-[#ffeded] text-xs mt-5 p-3 rounded-md">
             <span>
@@ -156,9 +159,7 @@ const Wallet: React.FC = () => {
               {network ? "[已连接]，请断开网络后使用无痕模式，防止钱包私钥泄漏。" : "[已断开],请使用无痕模式，防止钱包私钥泄漏"}
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-
-                <span>{generatePrivateKeyOnly ? '私钥模式' : '私钥地址模式'}</span>
-
+              <span>{generatePrivateKeyOnly ? '私钥模式' : '私钥地址模式'}</span>
               <Switch
                 checked={generatePrivateKeyOnly}
                 onChange={(checked: boolean) => setGeneratePrivateKeyOnly(checked)}

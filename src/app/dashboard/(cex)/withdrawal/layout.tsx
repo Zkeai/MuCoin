@@ -1,37 +1,38 @@
 'use client';
-import React from 'react';
-import Link from "next/link";
-import { Button } from '@douyinfe/semi-ui';
-import Icon from '/src/components/custom/Icon';
-import { useRouter,usePathname } from 'next/navigation';
-import CexWithDrawal from '/src/components/cex/CexWithDrawal';
+import React, { ReactNode } from 'react';  // 确保导入 ReactNode
+import Link from 'next/link';
+import { Button } from '@douyinfe/semi-ui';  // 如果未使用，可删除此导入
+import Icon from '@/components/custom/Icon';
+import { useRouter, usePathname } from 'next/navigation';
+import CexWithDrawal from '@/components/cex/CexWithDrawal';
 
 type LayoutProps = {
   children: ReactNode;
 };
 
-const Layout = ({children}:LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const pathname = usePathname();
-    // 获取路径中的交易所名称部分
-    const getExchangeName = () => {
-      const parts = pathname.split('/');
-      const exchange = `${parts[parts.length - 1]} 交易所` || '交易所'
-      return exchange.charAt(0).toUpperCase() + exchange.slice(1);
-    };
-    const exchangeName = getExchangeName();
-   
+
+  // 获取路径中的交易所名称部分
+  const getExchangeName = () => {
+    const parts = pathname.split('/');
+    const exchange = parts[parts.length - 1] || '交易所';
+    return exchange.charAt(0).toUpperCase() + exchange.slice(1) + ' 交易所';
+  };
+
+  const exchangeName = getExchangeName();
 
   return (
     <div className="flex flex-col justify-center items-center space-y-12 bg-[#f4f7fa] min-h-screen">
       <div className="space-y-5 flex flex-col items-center mt-10">
         <span className="text-2xl font-[500]">{exchangeName}批量提币</span>
-        <div className="flex text-sm">
-          <Icon type="icon-shuoming" size={18}></Icon>
+        <div className="flex text-sm items-center">
+          <Icon type="icon-shuoming" size={18} />
           <Link className="underline text-amber-500 ml-1" href={`/dashboard/doc`}>使用教程</Link>
         </div>
       </div>
-      <div className="flex flex-col  items-center w-[40vw]  shadow-2xl bg-[#ffffff] rounded-lg p-5">
+      <div className="flex flex-col items-center w-[40vw] shadow-2xl bg-[#ffffff] rounded-lg p-5">
         <div className="text-[#8895a7] space-y-2 w-full">
           <span className="text-md font-[500]">MuCoin</span>
           <ul className="text-[12px] space-y-1 list-disc ml-4">
@@ -47,10 +48,9 @@ const Layout = ({children}:LayoutProps) => {
         <div className="mt-8">
           {children}
         </div>
-
       </div>
     </div>
   );
-}
+};
 
 export default Layout;

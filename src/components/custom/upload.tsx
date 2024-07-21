@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, ChangeEvent, DragEvent } from 'react';
 import { Button, Tooltip } from '@douyinfe/semi-ui';
 import { IconUpload, IconEdit, IconDownload } from '@douyinfe/semi-icons';
 import classNames from 'classnames';
@@ -8,14 +8,20 @@ import * as XLSX from 'xlsx';
 import LineNumberedTextarea from './LineNumberedTextarea';
 import Icon from './Icon';
 
-const UploadComponent = ({ title, fileContent, setFileContent }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [isManualInput, setIsManualInput] = useState(false);
-  const [manualContent, setManualContent] = useState(fileContent);
-  const [fileType, setFileType] = useState(null);
-  const fileInputRef = useRef(null);
+interface UploadComponentProps {
+  title: string;
+  fileContent: string;
+  setFileContent: (content: string) => void;
+}
 
-  const handleDragOver = (e) => {
+const UploadComponent: React.FC<UploadComponentProps> = ({ title, fileContent, setFileContent }) => {
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [isManualInput, setIsManualInput] = useState<boolean>(false);
+  const [manualContent, setManualContent] = useState<string>(fileContent);
+  const [fileType, setFileType] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
@@ -24,37 +30,40 @@ const UploadComponent = ({ title, fileContent, setFileContent }) => {
     setIsDragging(false);
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
     readFile(file);
   };
 
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    readFile(file);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      readFile(file);
+    }
   };
 
-  const readFile = (file) => {
+  const readFile = (file: File) => {
     setFileType(file.type);
     const reader = new FileReader();
     reader.onload = (e) => {
-      const data = e.target.result;
-      if (file.type === 'text/plain') {
-        setFileContent(data);
-      } else if (
-        file.type ===
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-        file.type === 'application/vnd.ms-excel'
-      ) {
-        const workbook = XLSX.read(data, { type: 'binary' });
-        const sheets = {};
-        workbook.SheetNames.forEach(sheetName => {
-          const worksheet = workbook.Sheets[sheetName];
-          sheets[sheetName] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        });
-        setFileContent(JSON.stringify(sheets, null, 2));
+      const data = e.target?.result;
+      if (data) {
+        if (file.type === 'text/plain') {
+          setFileContent(data as string);
+        } else if (
+          file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          file.type === 'application/vnd.ms-excel'
+        ) {
+          const workbook = XLSX.read(data, { type: 'binary' });
+          const sheets: Record<string, any[]> = {};
+          workbook.SheetNames.forEach(sheetName => {
+            const worksheet = workbook.Sheets[sheetName];
+            sheets[sheetName] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          });
+          setFileContent(JSON.stringify(sheets, null, 2));
+        }
       }
     };
     if (file.type === 'text/plain') {
@@ -64,7 +73,7 @@ const UploadComponent = ({ title, fileContent, setFileContent }) => {
     }
   };
 
-  const handleManualInputChange = (e) => {
+  const handleManualInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const content = e.target.value;
     setManualContent(content);
     setFileContent(content);
@@ -76,10 +85,10 @@ const UploadComponent = ({ title, fileContent, setFileContent }) => {
   };
 
   const handleButtonClick = () => {
-    fileInputRef.current.click();
+    fileInputRef.current?.click();
   };
 
-  const downloadFile = (content, fileName, contentType) => {
+  const downloadFile = (content: Blob | string, fileName: string, contentType: string) => {
     const blob = new Blob([content], { type: contentType });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -135,11 +144,11 @@ const UploadComponent = ({ title, fileContent, setFileContent }) => {
         </Button>
       </div>
       {isManualInput ? (
-        <div className="relative p-4 border-dashed border-2 bg-white  rounded-lg" style={{ height: '200px' }}>
+        <div className="relative p-4 border-dashed border-2 bg-white rounded-lg" style={{ height: '200px' }}>
           <LineNumberedTextarea
             value={manualContent}
             onChange={handleManualInputChange}
-            style="h-[160px]"
+            style={{ height: '160px' }}
           />
         </div>
       ) : (
@@ -169,20 +178,18 @@ const UploadComponent = ({ title, fileContent, setFileContent }) => {
               拖拽文件到这里或点击上传
             </Button>
           </label>
-
         </div>
       )}
       <div className="mt-4 flex justify-between">
-        <span className="text-zinc-400 text-[14px]">{isManualInput ? '每一行输入一个私钥' : '支持文件类型：  Excel / Txt'}</span>
+        <span className="text-zinc-400 text-[14px]">{isManualInput ? '每一行输入一个私钥' : '支持文件类型： Excel / Txt'}</span>
         <Button
-              icon={<IconDownload />}
-              onClick={handleDownload}
-              disabled={!fileContent}
-            >
-              下载文件
-            </Button>
+          icon={<IconDownload />}
+          onClick={handleDownload}
+          disabled={!fileContent}
+        >
+          下载文件
+        </Button>
       </div>
-
     </div>
   );
 };

@@ -1,6 +1,4 @@
-// httpService.ts
-
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 class HttpService {
   private http: AxiosInstance;
@@ -17,7 +15,7 @@ class HttpService {
 
     // 请求拦截器
     this.http.interceptors.request.use(
-      (config: AxiosRequestConfig) => {
+      (config: InternalAxiosRequestConfig) => {
         const token = localStorage.getItem('token');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -41,11 +39,11 @@ class HttpService {
   }
 
   public get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.http.get<T>(url, config);
+    return this.http.get<T>(url, config).then(response => response.data);
   }
 
   public post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    return this.http.post<T>(url, data, config);
+    return this.http.post<T>(url, data, config).then(response => response.data);
   }
 
   // 其他 HTTP 方法也可以类似封装

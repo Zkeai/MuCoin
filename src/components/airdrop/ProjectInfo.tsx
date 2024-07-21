@@ -6,7 +6,24 @@ import { IconLink } from '@douyinfe/semi-icons';
 
 const { Title, Paragraph } = Typography;
 
-const Page = ({projectName, projectUrl, projectIconUrl, projectDescription, investor, financingAmount }) => {
+// 定义 Page 组件的 props 类型
+interface PageProps {
+  projectName: string;
+  projectUrl: string;
+  projectIconUrl: string;
+  projectDescription: string;
+  investor: string;
+  financingAmount: string;
+}
+
+const Page: React.FC<PageProps> = ({
+  projectName,
+  projectUrl,
+  projectIconUrl,
+  projectDescription,
+  investor,
+  financingAmount
+}) => {
   return (
     <div className="flex flex-col">
       <Card style={{ padding: '30px', margin: '0 auto', position: 'relative' }}>
@@ -27,7 +44,7 @@ const Page = ({projectName, projectUrl, projectIconUrl, projectDescription, inve
             {projectName}
           </Title>
         </Space>
-        <Space direction="vertical" style={{ width: '100%' }} size="large">
+        <Space vertical style={{ width: '100%' }} >
           <div>
             <Tag color="blue">项目说明</Tag>
             <Paragraph>

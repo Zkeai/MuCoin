@@ -1,4 +1,4 @@
-import httpService from '/src/http/httpService';
+import httpService from '@/http/httpService';
 
 interface NetworkTestI {
     url: string;

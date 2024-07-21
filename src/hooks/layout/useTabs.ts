@@ -1,42 +1,52 @@
-// hooks/useTabs.js
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTab, removeTab, changeActiveTab } from "/src/redux/states/headerSlice";
-import useIsClient from './useIsClient'
+import { RootState } from '@/redux/store'; // 确保你有定义 RootState 类型
+import { addTab, removeTab, changeActiveTab } from '@/redux/states/headerSlice';
+import useIsClient from './useIsClient';
+
+// 定义 Tabs 数据项的类型
+interface TabItem {
+  path: string;
+  title: string;
+}
 
 const useTabs = () => {
   const router = useRouter();
+  const pathname = usePathname(); // 获取当前路径
   const dispatch = useDispatch();
 
-  const tabsData = useSelector(state => state.header.tabsData);
-  const activeTab = useSelector(state => state.header.activeTab);
+  // 从 Redux store 中获取状态
+  const tabsData = useSelector((state: RootState) => state.header.tabsData) as TabItem[];
+  const activeTab = useSelector((state: RootState) => state.header.activeTab) as string;
   const isClient = useIsClient();
 
   useEffect(() => {
     if (isClient) {
-      const currentPath = router.pathname;
+      const currentPath = pathname; // 使用 pathname
       const initialTab = tabsData.find((item) => item.path === currentPath);
 
       if (initialTab) {
         dispatch(changeActiveTab(initialTab.title));
       }
     }
-  }, [router.pathname, tabsData, isClient, dispatch]);
+  }, [pathname, tabsData, isClient, dispatch]);
 
-  const handleItemClick = (item) => {
+  const handleItemClick = (item: TabItem) => {
     dispatch(changeActiveTab(item.title));
     router.push(item.path);
   };
 
-  const handleItemClose = (item, index) => {
+  const handleItemClose = (item: TabItem, index: number) => {
     dispatch(removeTab(item.path));
     if (activeTab === item.title) {
       const newTabs = tabsData.filter(tab => tab.path !== item.path);
       const newIndex = Math.max(index - 1, 0);
       const newItem = newTabs[newIndex];
-      dispatch(changeActiveTab(newItem.title));
-      router.push(newItem.path);
+      if (newItem) {
+        dispatch(changeActiveTab(newItem.title));
+        router.push(newItem.path);
+      }
     }
   };
 

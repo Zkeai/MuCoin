@@ -1,12 +1,12 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Switch, Input, Typography, Button, List, Tooltip, Select, Toast } from '@douyinfe/semi-ui';
-import useBinanceComponent from '/src/hooks/cex/useBinanceAccountinfo.ts'; 
-import CustomTextArea from '/src/components/custom/CustomTextArea';
-import Modal from '/src/components/cex/Modal';
-import Icon from '/src/components/custom/Icon';
+import useBinanceComponent from '@/hooks/cex/useBinanceAccountinfo'; 
+import CustomTextArea from '@/components/custom/CustomTextArea';
+import Modal from '@/components/cex/Modal';
+import Icon from '@/components/custom/Icon';
 import Styles from '../cex.module.css';
-import { binanceWithDrawal } from '/src/http/api/cex/binance/api.ts';
+import { binanceWithDrawal } from '@/http/api/cex/binance/api';
 
 // 定义网络列表的类型
 interface Network {
@@ -24,6 +24,8 @@ interface CoinInfo {
   locked: string;
   freeze: string;
 }
+
+
 
 const BinanceComponent: React.FC = () => {
   const {
@@ -53,8 +55,12 @@ const BinanceComponent: React.FC = () => {
     setActiveIndex(index); 
   };
 
-  const handleCoinChange = useCallback((value: string) => {
-    setSelectedCoin(value);
+  const handleCoinChange = useCallback((value: string | number | any[] | Record<string, any> | undefined) => {
+    if (typeof value === 'string') {
+      setSelectedCoin(value);
+    } else {
+      setSelectedCoin(''); // 处理其他类型的情况
+    }
   }, []);
 
   useEffect(() => {
@@ -67,7 +73,7 @@ const BinanceComponent: React.FC = () => {
     let successDraw = "";
     let failDraw = "";
     if (!textAreaValue || !selectedCoin || activeIndex === null) {
-      Toast.error("参数不全", 2);
+      Toast.error("参数不全");
       return;
     }
 
@@ -75,7 +81,7 @@ const BinanceComponent: React.FC = () => {
     for (const line of lines) {
       const [address, amount] = line.split(",");
       if (!address || !amount) {
-        Toast.error("地址或数量格式不正确", 2);
+        Toast.error("地址或数量格式不正确");
         continue;
       }
       try {

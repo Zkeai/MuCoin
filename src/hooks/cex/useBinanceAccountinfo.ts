@@ -2,11 +2,25 @@
 import { useState, useEffect } from 'react';
 import useCommon from './useCommon';
 import { Toast } from '@douyinfe/semi-ui';
-import { getBinanceAccountInfo, getBinanceAllCoinInfo } from '/src/http/api/cex/binance/api';
+import { getBinanceAccountInfo, getBinanceAllCoinInfo } from '@/http/api/cex/binance/api';
+
+// Define the types for network list
+interface Network {
+  network: string;
+  name: string;
+  withdrawFee: string;
+  coin: string;
+  withdrawMin: string;
+}
+
+// Define the type for network list as an object where keys are coin symbols and values are arrays of Network
+interface NetworkList {
+  [coin: string]: Network[];
+}
 
 const useBinanceComponent = () => {
-  const [coins, setCoins] = useState([]);
-  const [networkList, setNetworkList] = useState([]);
+  const [coins, setCoins] = useState<string[]>([]); // Specify that coins is an array of strings
+  const [networkList, setNetworkList] = useState<NetworkList>({}); // Initialize with an empty object
 
   const {
     apiKey,
@@ -24,15 +38,15 @@ const useBinanceComponent = () => {
     setAccountInfo,
   } = useCommon('binance', false);
 
-  const changeCoins = (data) => {
-    const assets = data.map(item => item.asset);
+  const changeCoins = (data: any) => {
+    const assets = data.map((item: { asset: string }) => item.asset);
     setCoins(assets);
   };
 
-  const getNetworkList = async ({ apiKey, secretKey, coins }) => {
+  const getNetworkList = async ({ apiKey, secretKey, coins }: { apiKey: string; secretKey: string; coins: string[] }) => {
     try {
       const res = await getBinanceAllCoinInfo({ apiKey, secretKey, coins });
-      const networkData = res.data;
+      const networkData: NetworkList = res.data; // Ensure the response data matches NetworkList type
       setNetworkList(networkData);
     } catch (error) {
       console.error('获取网络列表出错:', error);
@@ -62,7 +76,7 @@ const useBinanceComponent = () => {
         if (open) {
           const credentials = { binance: { apiKey, secretKey } };
           let jsonArray = JSON.parse(localStorage.getItem('cexInfo') || '[]');
-          const index = jsonArray.findIndex(item => item.binance);
+          const index = jsonArray.findIndex((item: any) => item.binance);
           if (index !== -1) {
             jsonArray[index] = credentials;
           } else {

@@ -1,17 +1,15 @@
-import { useState, useRef,useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { TextArea } from '@douyinfe/semi-ui';
-import '/src/components/components.module.css'
+import '@/components/components.module.css';
 
-import useCexComponent from '/src/hooks/cex/useBinanceAccountinfo.ts'
+interface MyComponentProps {
+  value: string;
+  onChange: (event: string) => void;
+  customStyle?: string; 
+}
 
-
-const LineNumberedTextArea = ({ value, onChange,customStyle }) => {
-  const {textAreaRef}  = useCexComponent()
-  const lineNumbersRef = useRef(null);
-
-  const handleChange = (val) => {
-    setValue(val);
-  };
+const LineNumberedTextArea: React.FC<MyComponentProps> = ({ value, onChange, customStyle }) => {
+  const lineNumbersRef = useRef<HTMLDivElement | null>(null);
 
   // 计算行号的函数
   const calculateLineNumbers = () => {
@@ -21,19 +19,19 @@ const LineNumberedTextArea = ({ value, onChange,customStyle }) => {
     return lines.length;
   };
 
-    // 监听内容变化，自动滚动到底部
-    useEffect(() => {
-        if (lineNumbersRef.current) {
-            lineNumbersRef.current.scrollTop = lineNumbersRef.current.scrollHeight- 18;
-        }
-      }, [value]);
+  // 监听内容变化，自动滚动到底部
+  useEffect(() => {
+    if (lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = lineNumbersRef.current.scrollHeight - 18;
+    }
+  }, [value]);
 
   return (
-    <div className= { !customStyle ? "flex w-[36vw] max-h-[212px]" :customStyle}>
+    <div className={customStyle ? customStyle : "flex w-[36vw] max-h-[212px]"}>
       <div
         id="line-numbers"
         ref={lineNumbersRef}
-        className=" overflow-y-hidden mr-[-21px] text-slate-300 text-[14px] leading-3  pt-[10px]  border-r  flex flex-col justify-start items-center text-center  "
+        className="overflow-y-hidden mr-[-21px] text-slate-300 text-[14px] leading-3 pt-[10px] border-r flex flex-col justify-start items-center text-center"
       >
         {/* 根据文本框内容计算行号 */}
         {Array.from(Array(calculateLineNumbers()), (_, index) => (
@@ -43,7 +41,7 @@ const LineNumberedTextArea = ({ value, onChange,customStyle }) => {
       <div className="flex-grow relative">
         <TextArea
           value={value}
-          onChange={(e) => onChange(e)}
+          onChange={onChange}
           rows={10}
           className="w-full pl-4 h-full outline-none resize-none"
         />

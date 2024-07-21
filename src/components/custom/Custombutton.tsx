@@ -3,7 +3,15 @@
 import React from 'react';
 import { Button } from '@douyinfe/semi-ui';
 
-const VipButton = ({ text, buttonColor, badgeContent, showBadge }) => {
+// 定义组件的 props 类型
+interface VipButtonProps {
+  text: string;          // 按钮文本
+  buttonColor: string;   // 按钮颜色
+  badgeContent?: string; // 徽章内容（可选）
+  showBadge?: boolean;   // 是否显示徽章（可选）
+}
+
+const VipButton: React.FC<VipButtonProps> = ({ text, buttonColor, badgeContent, showBadge }) => {
   return (
     <div className="relative inline-block">
       <Button style={{ backgroundColor: buttonColor, position: 'relative' }} theme='solid'>

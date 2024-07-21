@@ -28,8 +28,8 @@ interface PointResponse {
   experience: number;
 }
 interface UpdateResponse {
-    ok: boolean
-  }
+  ok: boolean;
+}
 
 class Newland {
   private baseUrl: string;
@@ -45,7 +45,11 @@ class Newland {
       const signature = await this.walletFromPrivateKey.signMessage(message);
       return signature;
     } catch (error) {
-      throw new Error("Error signing message: " + error.message);
+      if (error instanceof Error) {
+        throw new Error("Error signing message: " + error.message);
+      } else {
+        throw new Error("Unknown error signing message");
+      }
     }
   }
 
@@ -63,7 +67,7 @@ class Newland {
     return responseData;
   }
 
-  async login(nonce: string): Promise<LoginResponse> {
+  async login(nonce: string): Promise<LoginResponse | undefined> {
     const address = this.walletFromPrivateKey.address;
     const issuedAt = new Date().toISOString();
     const messageData = `www.newland.club wants you to sign in with your Ethereum account:\n${address}\n\nSign in your wallet to new-land \n\nURI: https://www.newland.club\nVersion: 1\nChain ID: 1\nNonce: ${nonce}\nIssued At: ${issuedAt}`;
@@ -85,83 +89,85 @@ class Newland {
         credentials: "include",
       });
 
-      const responseData = await response.json();
+      const responseData: LoginResponse = await response.json();
       return responseData;
     } catch (error) {
-      console.error("Error during login:", error.message);
+      if (error instanceof Error) {
+        console.error("Error during login:", error.message);
+      } else {
+        console.error("Unknown error during login");
+      }
     }
   }
 
-  //签到
-  async dailyCheck(year: string, month: string): Promise<PointResponse> {
+  // 签到
+  async dailyCheck(year: string, month: string): Promise<PointResponse | undefined> {
     try {
       const response = await fetch(`${this.baseUrl}/missions/daily_check_api`, {
         method: "POST",
-        credentials: "include", 
+        credentials: "include",
       });
-      const responseData = await response.json();
+      const responseData: PointResponse = await response.json();
       return responseData;
     } catch (error) {
-      console.error("Error during dailycheck:", error.message);
+      if (error instanceof Error) {
+        console.error("Error during daily check:", error.message);
+      } else {
+        console.error("Unknown error during daily check");
+      }
     }
   }
 
-  //修改名字
+  // 修改名字
   async updateName(userid: string): Promise<UpdateResponse> {
     const name = generateRandomString(12);
-    const response = await fetch(
-      `${this.baseUrl}/user/update_username_api`,
-      {
-        body: `{\"username\":\"${name}\",\"user_id\":\"${userid}\"}`,
-        method: "POST",
-        credentials: "include",
-      }
-    );
-    const responseData = await response.json();
+    const response = await fetch(`${this.baseUrl}/user/update_username_api`, {
+      body: `{\"username\":\"${name}\",\"user_id\":\"${userid}\"}`,
+      method: "POST",
+      credentials: "include",
+    });
+    const responseData: UpdateResponse = await response.json();
     return responseData;
   }
 
-    //修改头像
-    async updateAvator(userid: string): Promise<UpdateResponse> {
-
-        const response = await fetch(`${this.baseUrl}/user/update_avatar_api`, {
-            "headers": {
-              "accept": "*/*",
-              "accept-language": "zh,zh-CN;q=0.9,en;q=0.8",
-              "cache-control": "no-cache",
-              "content-type": "text/plain;charset=UTF-8",
-              "pragma": "no-cache",
-              "priority": "u=1, i",
-              "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
-              "sec-ch-ua-mobile": "?0",
-              "sec-ch-ua-platform": "\"macOS\"",
-              "sec-fetch-dest": "empty",
-              "sec-fetch-mode": "cors",
-              "sec-fetch-site": "same-origin"
-            },
-            "referrer": "https://www.newland.club/user/pts",
-            "referrerPolicy": "strict-origin-when-cross-origin",
-            "body": `{\"avatar_url\":\"https://guneiblzlyekrxabkgmk.supabase.co/storage/v1/object/public/avatars/95504a6d-3049-4fc1-8d9a-2bb313ace47c/643e2f7e-468f-419b-97f0-a8b68faec135avatarProfile.png\",\"user_id\":\"${userid}\"}`,
-            "method": "POST",
-            "mode": "cors",
-            "credentials": "include"
-          });
-        const responseData = await response.json();
-        return responseData;
-      }
-
-  //查询积分
-
-  async getReward(userid: string):Promise<PointResponse>{
-    const response = await fetch(`${this.baseUrl}/reward/get_user_reward_api`, {
-        body: `{\"user_id\":\"${userid}\"}`,
-        method: "POST",
-        credentials: "include",
-      });
-      const responseData = await response.json();
-      return responseData;
+  // 修改头像
+  async updateAvatar(userid: string): Promise<UpdateResponse> {
+    const response = await fetch(`${this.baseUrl}/user/update_avatar_api`, {
+      headers: {
+        accept: "*/*",
+        "accept-language": "zh,zh-CN;q=0.9,en;q=0.8",
+        "cache-control": "no-cache",
+        "content-type": "text/plain;charset=UTF-8",
+        pragma: "no-cache",
+        priority: "u=1, i",
+        "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"macOS"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+      },
+      referrer: "https://www.newland.club/user/pts",
+      referrerPolicy: "strict-origin-when-cross-origin",
+      body: `{\"avatar_url\":\"https://guneiblzlyekrxabkgmk.supabase.co/storage/v1/object/public/avatars/95504a6d-3049-4fc1-8d9a-2bb313ace47c/643e2f7e-468f-419b-97f0-a8b68faec135avatarProfile.png\",\"user_id\":\"${userid}\"}`,
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+    });
+    const responseData: UpdateResponse = await response.json();
+    return responseData;
   }
-  
+
+  // 查询积分
+  async getReward(userid: string): Promise<PointResponse> {
+    const response = await fetch(`${this.baseUrl}/reward/get_user_reward_api`, {
+      body: `{\"user_id\":\"${userid}\"}`,
+      method: "POST",
+      credentials: "include",
+    });
+    const responseData: PointResponse = await response.json();
+    return responseData;
+  }
 }
 
 export default Newland;

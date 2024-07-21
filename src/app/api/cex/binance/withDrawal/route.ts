@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import BinanceClient from '/src/lib/binanceClient';
+import BinanceClient from '@/lib/binanceClient';
 
 export async function POST(req: NextRequest) {
   const { apiKey, secretKey, coin, address, amount, network} = await req.json();
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     const client = new BinanceClient(apiKey, secretKey);
-    const accountInfo = await client.getWithDrawa(coin,address,amount,network);
+    const accountInfo = await client.getWithDraw(coin,address,amount,network);
  
     return NextResponse.json(accountInfo, { status: 200 });
   } catch (error) {

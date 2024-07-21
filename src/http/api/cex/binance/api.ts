@@ -1,6 +1,6 @@
 // apiService.ts
 
-import httpService from '/src/http/httpService';
+import httpService from '@/http/httpService';
 
 
 interface BinanceCommonQuery {
@@ -26,7 +26,7 @@ interface AssetDetail {
 interface BinanceCoinInfoQuery{
   apiKey: string;
   secretKey: string;
-  coins: []
+  coins: string[]
 }
 
 export const getBinanceAccountInfo = (data: BinanceCommonQuery): Promise<any> => {

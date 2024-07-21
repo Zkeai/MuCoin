@@ -1,23 +1,22 @@
-// components/Icon.tsx
-import React from 'react';
-interface IconProps {
-  className: string;
+import React, { SVGProps } from 'react';
+
+interface IconProps extends SVGProps<SVGSVGElement> {
   type: string;
-  size?: number;
+  size: number;
+  className?: string;
   color?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ className, type, size = 24, color="black",...props }) => (
+const Icon: React.FC<IconProps> = ({ className, type, size = 24, color="black", ...props }) => (
   <svg
-  className={`${className}`}
+    className={`${className} iconfont ${type}`}
     aria-hidden="true"
     width={size}
     height={size}
     fill={color}
     {...props}
   >
-
-    <use  xlinkHref={`#${type}`}></use>
+    <use xlinkHref={`#${type}`} />
   </svg>
 );
 

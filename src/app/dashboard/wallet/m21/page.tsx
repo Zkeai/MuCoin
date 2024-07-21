@@ -2,8 +2,8 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { Input, Select, Tooltip, Toast } from "@douyinfe/semi-ui";
 import { useAccount } from 'wagmi';
-import Update from '/src/components/custom/upload';
-import SvgIcon from "/src/components/custom/Icon";
+import Update from '@/components/custom/upload';
+import SvgIcon from "@/components/custom/Icon";
 
 interface Option {
   value: string;
@@ -44,17 +44,19 @@ const Trance: React.FC = () => {
 
   useEffect(() => {
     if (!isConnected) {
-      Toast.warning("请连接归集的钱包", 2);
+      Toast.warning("请连接归集的钱包");
     }
   }, [isConnected]);
 
-  const onChange = (value: string) => {
-    const selected = list
-      .flatMap((group) => group.children)
-      .find((option) => option.value === value);
-    if (selected) {
-      setLabel(selected);
-      setRpcValue(selected.value);
+  const onChange = (value: string | number | any[] | Record<string, any> | undefined) => {
+    if (typeof value === 'string') {
+      const selected = list
+        .flatMap((group) => group.children)
+        .find((option) => option.value === value);
+      if (selected) {
+        setLabel(selected);
+        setRpcValue(selected.value);
+      }
     }
   };
 
@@ -77,7 +79,7 @@ const Trance: React.FC = () => {
 
           <Select
             onChange={onChange}
-            size="modal"
+            size="large"
             value={label.value}
             className="w-full"
             placeholder=""

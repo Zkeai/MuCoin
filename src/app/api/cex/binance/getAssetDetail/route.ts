@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import BinanceClient from '/src/lib/binanceClient';
+import BinanceClient from '@/lib/binanceClient';
 
 export async function POST(req: NextRequest) {
   

@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
-import Icon from '/src/components/custom/Icon';
-import Style from '/src/components/components.module.css'
+import Icon from '@/components/custom/Icon';
+import Style from '@/components/components.module.css'
 
 
 interface SocialUrl {

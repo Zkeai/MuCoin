@@ -1,12 +1,12 @@
 "use client";
-import React from 'react';
+import React,{ReactNode} from 'react';
 import "./index.css"
-import Nav from '/src/components/layout/main/Nav'
-import Tab from '/src/components/layout/header/Tabs'
+import Nav from '@/components/layout/main/Nav'
+import Tab from '@/components/layout/header/Tabs'
 import { BackTop } from '@douyinfe/semi-ui';
 
 import { Provider } from 'react-redux'
-import store from "/src/redux/store.ts"
+import store from "@/redux/store"
 
 type DashboardLayoutProps = {
     children: ReactNode;

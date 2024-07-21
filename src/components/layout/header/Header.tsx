@@ -1,113 +1,98 @@
 'use client';
 
-import React from 'react'
-import {useRouter} from 'next/navigation'
-import {useState} from "react"
-import Icon from '/src/components/custom/Icon';
-import Style from '/src/components/components.module.css'
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Icon from '@/components/custom/Icon';
+import Style from '@/components/components.module.css';
 import { Popover } from '@douyinfe/semi-ui';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
-import JSonData from '/src/config/header.json'
+import JSonData from '@/config/header.json';
 
-
-interface MenuItem {
+// Define types for sub-menu items
+interface SubMenuItem {
   name: string;
   path?: string;
   click?: boolean;
   icon?: string;
-  item: MenuItem[];
+  item?: SubMenuItem[];
 }
 
-interface HeaderProps {
-  T: string;
-  item: MenuItem[];
+// Define types for the menu structure
+interface MenuItem {
+  name: string;
+  icon?: string;
+  item?: SubMenuItem[];
 }
-  
-  const renderSubMenu = (items) => {
-    return (
 
-       <ul className="flex space-x-10 min-w-[200px] w-auto  py-8 px-8 ">
-        <div className="flex space-x-10 min-w-[200px] w-auto  justify-center">
+// Function to render sub-menu
+const renderSubMenu = (items: SubMenuItem[]) => {
+  return (
+    <ul className="flex space-x-10 min-w-[200px] w-auto py-8 px-8">
+      <div className="flex space-x-10 min-w-[200px] w-auto justify-center">
         {items.map((subItem, index) => (
-         
-            <li key={index} className="mr-4 min-w-[100px]  ">
-     
-                <div className="flex items-center space-x-2  text-black cursor-default pl-4 font-bold">
-                  <Icon type={subItem.icon} size={20} color="blue"/>
-                  <span>{subItem.name}</span>
-                </div>
-
-                {
-                subItem.item && subItem.item.length > 0 && (
-                  <div className="mt-8 flex flex-col space-y-6 items-center justify-center">
-                    {subItem.item.map((item, index) => (
-                      <a key={index} className="hover:text-amber-500 " href={item.path || '#'}>
-                      <span >{item.name}</span>
-                      </a>
-                    ))}
-                  </div>)
-              }
-  
-
-     
-  
-            </li>
+          <li key={index} className="mr-4 min-w-[100px]">
+            <div className="flex items-center space-x-2 text-black cursor-default pl-4 font-bold">
+              <Icon type={subItem.icon || ''} size={20} color="blue" />
+              <span>{subItem.name}</span>
+            </div>
+            {subItem.item && subItem.item.length > 0 && (
+              <div className="mt-8 flex flex-col space-y-6 items-center justify-center">
+                {subItem.item.map((item, index) => (
+                  <a key={index} className="hover:text-amber-500" href={item.path || '#'}>
+                    <span>{item.name}</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </li>
         ))}
-        </div>
-        </ul>
+      </div>
+    </ul>
+  );
+};
 
-    );
-  };
-
-
-const Header: React.FC<HeaderProps> = () => {
+const Header: React.FC = () => {
   const router = useRouter();
-  const [menu, setMenu] = useState(JSonData.item[0].item);
+  const [menu, setMenu] = useState<MenuItem[]>(JSonData.item || []);
   const { address, isConnected } = useAccount();
-  const titleClickHandle = ()=>{
-    router.push("/")
-  }
 
+  const titleClickHandle = () => {
+    router.push('/');
+  };
 
   return (
     <div className={`fixed top-0 left-0 right-0 flex items-center shadow-md font-bold h-16 p-4 z-100 backdrop-blur`}>
-        <div className={`flex flex-none w-40 space-x-10 justify-center text-center`}>
-            <Icon className={Style.headLeftIcon}  type="icon-gedian" size={28}  />
-            <div className={Style.title} onClick={titleClickHandle}>
-            <span className={Style.text}>MuCoin</span>
-              <Icon className={Style.zhuye}  type="icon-zhuye" size={28}  />
-            </div>
+      <div className={`flex flex-none w-40 space-x-10 justify-center text-center`}>
+        <Icon className={Style.headLeftIcon} type="icon-gedian" size={28} />
+        <div className={Style.title} onClick={titleClickHandle}>
+          <span className={Style.text}>MuCoin</span>
+          <Icon className={Style.zhuye} type="icon-zhuye" size={28} />
         </div>
-        <div className={`flex-grow flex justify-center`}>
-          <nav>
-            <ul className="flex space-x-8 ">
+      </div>
+      <div className={`flex-grow flex justify-center`}>
+        <nav>
+          <ul className="flex space-x-8">
             {menu.map((menuItem, index) => (
-            <li key={index} className="relative group">
-              <Popover
-              spacing={15}
-              content={renderSubMenu(menuItem.item)}
-              >
-              <button className="flex items-center px-2 py-1 rounded-lg text-lg  hover:bg-amber-500 hover:text-white ">
-                {menuItem.icon && <span className={`iconfont ${menuItem.icon} mr-2`}></span>}
-                {menuItem.name}
-              </button>
-              </Popover>
-
- 
-            </li>
-          ))}
-            </ul>
-          </nav>
-        </div>
-        <div className="relative w-1/4 space-x-30 flex-none flex pb-10" >
-          <div className="absolute right-0 ">
+              <li key={index} className="relative group">
+                <Popover spacing={15} content={renderSubMenu(menuItem.item || [])}>
+                  <button className="flex items-center px-2 py-1 rounded-lg text-lg hover:bg-amber-500 hover:text-white">
+                    {menuItem.icon && <span className={`iconfont ${menuItem.icon} mr-2`}></span>}
+                    {menuItem.name}
+                  </button>
+                </Popover>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+      <div className="relative w-1/4 space-x-30 flex-none flex pb-10">
+        <div className="absolute right-0">
           <ConnectButton />
-          </div>
-          
         </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

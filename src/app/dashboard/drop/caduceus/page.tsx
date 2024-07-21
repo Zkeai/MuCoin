@@ -3,27 +3,33 @@
 import React, { useState } from 'react';
 import { Card, Typography, Space, Table, Input, Select, Button, Toast } from '@douyinfe/semi-ui';
 import { ethers } from 'ethers';
-import Upload from '/src/components/custom/upload';
+import Upload from '@/components/custom/upload';
 import pLimit from 'p-limit'; // 引入p-limit库
 
 const { Title, Paragraph } = Typography;
 
-import Caduceus from '/src/job/cad/main.ts';
-import YesCaptch from '/src/job/yesCaptcha/main.ts';
+import Caduceus from '@/job/cad/main';
+import YesCaptch from '@/job/yesCaptcha/main';
 
-const Page = () => {
-  const [fileContent, setFileContent] = useState('');
-  const [privateKeys, setPrivateKeys] = useState([]);
-  const [yesCaptchaKey, setYesCaptchaKey] = useState('');
-  const [inviter, setInviter] = useState('');
-  const [selectedTask, setSelectedTask] = useState('sign');
+interface PrivateKeyItem {
+  key: string;
+  status: string;
+  inviter: string;
+}
+
+const Page: React.FC = () => {
+  const [fileContent, setFileContent] = useState<string>('');
+  const [privateKeys, setPrivateKeys] = useState<PrivateKeyItem[]>([]);
+  const [yesCaptchaKey, setYesCaptchaKey] = useState<string>('');
+  const [inviter, setInviter] = useState<string>('');
+  const [selectedTask, setSelectedTask] = useState<'sign' | 'invite'>('sign');
 
   const list = [
     { value: 'sign', label: '每日签到(先绑定邀请)', otherKey: 0 },
     { value: 'invite', label: '邀请绑定(仅需绑定一次)', otherKey: 1 },
   ];
 
-  const isValidPrivateKey = (key) => {
+  const isValidPrivateKey = (key: string): boolean => {
     try {
       const wallet = new ethers.Wallet(key);
       return !!wallet.address;
@@ -32,7 +38,7 @@ const Page = () => {
     }
   };
 
-  const handleFileUpload = (content) => {
+  const handleFileUpload = (content: string) => {
     setFileContent(content);
     if (!content.trim()) {
       setPrivateKeys([]);
@@ -47,9 +53,9 @@ const Page = () => {
     setPrivateKeys(processedKeys);
   };
 
-  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  const executeSingleTask = async (item) => {
+  const executeSingleTask = async (item: PrivateKeyItem) => {
     const { key, status } = item;
 
     if (status !== '未处理') {
@@ -78,12 +84,23 @@ const Page = () => {
             "HCaptchaTaskProxyless"
           );
           const taskId = await yesCaptcha.createTask();
-          const gRecaptchaResponse = await yesCaptcha.getResponse(taskId);
-
-          const cad = new Caduceus();
-          const taskId_ = await cad.open(gRecaptchaResponse, key);
-          const res = await cad.task(taskId_);
-          newStatus = res;
+          if (!taskId) {
+            newStatus = '获取任务ID失败';
+          } else {
+            const gRecaptchaResponse = await yesCaptcha.getResponse(taskId);
+            if (!gRecaptchaResponse) {
+              newStatus = '获取验证码失败';
+            } else {
+              const cad = new Caduceus();
+              const taskId_ = await cad.open(gRecaptchaResponse, key);
+              if (taskId_) {
+                const res:string | undefined = await cad.task(taskId_);
+                newStatus = res ?? '任务失败';
+              } else {
+                newStatus = '获取任务ID失败';
+              }
+            }
+          }
 
         } else if (selectedTask === 'invite') {
           const yesCaptcha = new YesCaptch(
@@ -93,12 +110,18 @@ const Page = () => {
             "HCaptchaTaskProxyless"
           );
           const taskId = await yesCaptcha.createTask();
-          const gRecaptchaResponse = await yesCaptcha.getResponse(taskId);
-        
-          const cad = new Caduceus();
-          const res = await cad.invite(gRecaptchaResponse, inviter, key);
-          newStatus = res;
-
+          if (!taskId) {
+            newStatus = '获取任务ID失败';
+          } else {
+            const gRecaptchaResponse = await yesCaptcha.getResponse(taskId);
+            if (!gRecaptchaResponse) {
+              newStatus = '获取验证码失败';
+            } else {
+              const cad = new Caduceus();
+              const res = await cad.invite(gRecaptchaResponse, inviter, key);
+              newStatus = res;
+            }
+          }
         }
 
       } catch (error) {
@@ -161,12 +184,12 @@ const Page = () => {
               <Input
                 placeholder="请输入 yescaptcha 的密钥"
                 value={yesCaptchaKey}
-                onChange={(e) => setYesCaptchaKey(e)}
+                onChange={(e) => setYesCaptchaKey(e as string)}
               />
               <Input
                 placeholder="请输入邀请地址(小写)"
                 value={inviter}
-                onChange={(e) => setInviter(e)}
+                onChange={(e) => setInviter(e as string)}
                 disabled={selectedTask !== 'invite'}
               />
               <Select
@@ -176,13 +199,13 @@ const Page = () => {
                 optionList={list}
                 value={selectedTask}
                 onChange={(value) => {
-                  setSelectedTask(value);
+                  setSelectedTask(value as 'sign' | 'invite');
                   if (value === 'sign') {
                     setInviter(''); // 清空邀请码
                   }
                 }}
               />
-              <Button  theme='solid' type='warning' onClick={executeTask}>开始运行</Button>
+              <Button theme='solid' type='warning' onClick={executeTask}>开始运行</Button>
             </Space>
           </div>
         </Card>

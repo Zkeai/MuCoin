@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Table, Select, Notification, Spin } from '@douyinfe/semi-ui';
 import { IconCopyStroked, IconRedoStroked } from '@douyinfe/semi-icons';
-import networks from '/src/config/rpc.json';
+import networks from '@/config/rpc.json';
 
 interface Network {
   name: string;
@@ -55,9 +55,11 @@ const RpcTest: React.FC = () => {
     }
   };
 
-  const handleNetworkChange = (value: string) => {
-    setSelectedNetwork(value);
-    setResults({});
+  const handleNetworkChange = (value: string | number | any[] | Record<string, any> | undefined) => {
+    if (typeof value === 'string') {
+      setSelectedNetwork(value);
+      setResults({});
+    }
   };
 
   const copyToClipboard = (url: string) => {
