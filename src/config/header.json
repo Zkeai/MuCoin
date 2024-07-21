@@ -5,82 +5,37 @@
       "name": "head",
       "item": [
         {
-          "name": "撸毛",
+          "name": "脚本",
           "item": [
             {
               "name": "测试网",
               "icon": "icon-ceshiwangluozi",
               "item": [
                 {
-                  "name": "newland",
+                  "name": "Newland",
                   "icon": "icon-LOGO_3",
                   "click": true,
                   "path": "/dashboard/drop/newland",
                   "item": []
                 }
               ]
-            }
-          ]
-        },
-        {
-          "name": "监控",
-          "item": [
-            {
-              "name": "交易所",
-              "icon": "icon-jiaoyisuo",
-              "item": [
-                {
-                  "name": "Binance",
-                  "path": "/dashboard/withdrawal/binance",
-                  "click": true,
-                  "item": []
-                },
-                {
-                  "name": "Okx",
-                  "path": "/dashboard/withdrawal/okex",
-                  "click": true,
-                  "item": []
-                },
-                {
-                  "name": "Bitget",
-                  "path": "/dashboard/withdrawal/bitget",
-                  "click": true,
-                  "item": []
-                }
-              ]
             },
             {
-              "name": "链上",
-              "icon": "icon-lianshangzichan",
+              "name": "项目",
+              "icon": "icon-jiaoben",
               "item": [
                 {
-                  "name": "Evm链",
-                  "path": "/dex/evm",
+                  "name": "Caduceus",
+                  "icon": "icon-cad-CJP74KbY",
                   "click": true,
-                  "item": []
-                },
-                {
-                  "name": "Solana",
-                  "path": "/dex/sol",
-                  "click": false,
-                  "item": []
-                }
-              ]
-            },
-            {
-              "name": "其他",
-              "icon": "icon-qita",
-              "item": [
-                {
-                  "name": "discord",
-                  "path": "/monitor/discord",
-                  "click": true,
+                  "path": "/dashboard/drop/caduceus",
                   "item": []
                 }
               ]
             }
           ]
         },
+
         {
           "name": "工具",
           "item": [
@@ -103,6 +58,30 @@
                 {
                   "name": "钱包授权",
                   "path": "/wallet/authorization",
+                  "click": true,
+                  "item": []
+                }
+              ]
+            },
+            {
+              "name": "交易所",
+              "icon": "icon-jiaoyisuo",
+              "item": [
+                {
+                  "name": "Binance",
+                  "path": "/dashboard/withdrawal/binance",
+                  "click": true,
+                  "item": []
+                },
+                {
+                  "name": "Okx",
+                  "path": "/dashboard/withdrawal/okex",
+                  "click": true,
+                  "item": []
+                },
+                {
+                  "name": "Bitget",
+                  "path": "/dashboard/withdrawal/bitget",
                   "click": true,
                   "item": []
                 }
