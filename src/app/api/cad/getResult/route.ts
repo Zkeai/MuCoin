@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const { damaKey,resultid } = await req.json();
     
 
-    if (!damaKey | !resultid ) {
+    if (!damaKey || !resultid ) {
       return NextResponse.json({ error: '缺少参数' }, { status: 400 });
     }
 

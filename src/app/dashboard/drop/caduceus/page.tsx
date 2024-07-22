@@ -101,8 +101,12 @@ const Page: React.FC = () => {
             }
           );
           if (taskId_.data) {
-            const res: string | undefined = await task({"taskid":taskId_.data});
-            newStatus = res.data ?? '签到失败';
+            const res: any= await task({"taskid":taskId_.data});
+            if (res.data.code === 0) {
+              newStatus = "签到成功";
+            } else {
+              newStatus = "签到失败";
+            }
           } else {
             newStatus = '获取任务ID失败';
           }
