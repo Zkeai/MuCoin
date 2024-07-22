@@ -102,8 +102,8 @@ const Page: React.FC = () => {
           );
           if (taskId_.data) {
             const res: any= await task({"taskid":taskId_.data});
-            if (res.data.code === 0) {
-              newStatus = "签到成功";
+            if (res.status === 200) {
+              newStatus = res.data
             } else {
               newStatus = "签到失败";
             }

@@ -1,10 +1,10 @@
 import httpService from "@/http/httpService";
 
 interface CadCommonQuery {
-  damaKey: string;
+  appkey: string;
 }
 interface CadResCommonQuery {
-  damaKey: string;
+  appkey: string;
   resultid: string;
 }
 interface CadSignCommonQuery {
