@@ -87,7 +87,7 @@ const useBinanceComponent = () => {
         Toast.error('查询资产信息失败');
       }
     } catch (error) {
-      console.error('查询资产信息出错:', error);
+ 
       Toast.error('查询资产信息出错');
     }
   };

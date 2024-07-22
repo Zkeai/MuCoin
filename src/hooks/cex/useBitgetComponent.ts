@@ -118,7 +118,6 @@ const useBitgetComponent = () => {
         localStorage.setItem('cexInfo', newJsonString);
       }
     } catch (error) {
-      console.error('Error fetching account info:', error);
     }
   };
 

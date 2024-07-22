@@ -48,7 +48,11 @@ class Ttorc {
           body: JSON.stringify(data),
         });
         const result = await response.json();
-        if (result.status === 4016 || result.status === 4026) {
+        if (
+          result.status === 4016 ||
+          result.status === 4026 ||
+          result.status === 4039
+        ) {
           return "识别失败";
         }
         const jy_rep = result.data;

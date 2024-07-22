@@ -9,8 +9,7 @@ import pLimit from 'p-limit'; // 引入p-limit库
 const { Title, Paragraph } = Typography;
 
 import Caduceus from '@/job/cad/main';
-import Ttorc from '@/job/ttorc/main';
-import {getCadRep,getCadRes} from '@/http/api/drop/cad/api'
+import {getCadRep,getCadRes,sign,task,invite} from '@/http/api/drop/cad/api'
 
 interface PrivateKeyItem {
   key: string;
@@ -79,7 +78,7 @@ const Page: React.FC = () => {
 
         let boo = false;
         let response: any = "";
-
+       
         if (selectedTask === 'sign') {
 
           while (!boo) {
@@ -92,18 +91,18 @@ const Page: React.FC = () => {
             }
           }
           
-          const cad = new Caduceus();
-          const taskId_ = await cad.open_jy(
-            response.captchaId,
-            response.captchaOutput,
-            response.genTime,
-            response.lotNumber,
-            response.passToken,
-            key
+          const taskId_ = await sign(
+            {"captchaId":response.captchaId,
+              "captchaOutput":response.captchaOutput,
+              "genTime":response.genTime,
+              "lotNumber":response.lotNumber,
+              "passToken":response.passToken,
+              "key":key
+            }
           );
-          if (taskId_) {
-            const res: string | undefined = await cad.task(taskId_);
-            newStatus = res ?? '签到失败';
+          if (taskId_.data) {
+            const res: string | undefined = await task({"taskid":taskId_.data});
+            newStatus = res.data ?? '签到失败';
           } else {
             newStatus = '获取任务ID失败';
           }
@@ -111,30 +110,35 @@ const Page: React.FC = () => {
         } else if (selectedTask === 'invite') {
           while (!boo) {
             const res = await getCadRep({"damaKey":damaKey})
-            const resultid = res.data
+            const resultid = res.data ?? "打码失败"
             const resp = await getCadRes({"damaKey":damaKey,"resultid":resultid})
-            response = resp.data
+            response = resp.data ?? "打码失败"
             if (response) {
               boo = true;
             }
           }
 
-          const cad = new Caduceus();
-          const res = await cad.invite_jy(    
-            response.captchaId,
-            response.captchaOutput,
-            response.genTime,
-            response.lotNumber,
-            response.passToken,
-            inviter,
-            key
-          );
 
-          newStatus = res;
+          const res = await invite(    
+            {"captchaId":response.captchaId,
+              "captchaOutput":response.captchaOutput,
+              "genTime":response.genTime,
+              "lotNumber":response.lotNumber,
+              "passToken":response.passToken,
+              "inviter":inviter,
+              "key":key,
+            }
+          );
+          if (res.data.code === 0) {
+            newStatus = "绑定成功";
+          } else {
+            newStatus = "绑定失败";
+          }
+          
         }
 
       } catch (error) {
-        newStatus = '任务失败';
+        newStatus = '任务出错';
       }
     } else {
       newStatus = '私钥错误';
@@ -147,7 +151,7 @@ const Page: React.FC = () => {
 
   const executeTask = async () => {
     if (!damaKey.trim()) {
-      Toast.error('请输入 yescaptcha 的密钥');
+      Toast.error('请输入打码平台的密钥');
       return;
     }
 
@@ -161,7 +165,7 @@ const Page: React.FC = () => {
       return;
     }
 
-    const limit = pLimit(5); // 控制并发数为5
+    const limit = pLimit(3); // 控制并发数为5
     const tasks = privateKeys.map(item => limit(() => executeSingleTask(item)));
     await Promise.allSettled(tasks); // 使用Promise.allSettled代替Promise.all
   };

@@ -93,9 +93,9 @@ class Newland {
       return responseData;
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Error during login:", error.message);
+
       } else {
-        console.error("Unknown error during login");
+
       }
     }
   }
@@ -111,9 +111,9 @@ class Newland {
       return responseData;
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Error during daily check:", error.message);
+
       } else {
-        console.error("Unknown error during daily check");
+  
       }
     }
   }

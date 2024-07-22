@@ -34,7 +34,6 @@ class Oklink {
       const response: AxiosResponse<T> = await axios.get(url, config);
       return response.data;
     } catch (error) {
-      console.error('Error making GET request:', error);
       throw error;
     }
   }
