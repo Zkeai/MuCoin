@@ -1,17 +1,12 @@
 class YesCaptch {
-  clientKey: string;
-  websiteKey: string;
-  websiteUrl: string;
-  taskType: string;
-
-  constructor(clientKey: string, websiteKey: string, websiteUrl: string, taskType: string) {
-    this.clientKey = clientKey;
+  constructor(clientKey, websiteKey, websiteUrl, taskType) {
     this.websiteKey = websiteKey;
     this.websiteUrl = websiteUrl;
     this.taskType = taskType;
+    this.clientKey = clientKey;
   }
 
-  async createTask(): Promise<string | undefined> {
+  async createTask() {
     try {
       const url = "https://api.yescaptcha.com/createTask";
       const data = {
@@ -23,9 +18,9 @@ class YesCaptch {
         },
       };
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
@@ -33,13 +28,12 @@ class YesCaptch {
       const taskId = result.taskId;
       if (taskId) {
         return taskId;
+      } else {
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
-  async getResponse(taskID: string): Promise<string | undefined> {
+  async getResponse(taskID) {
     let times = 0;
     while (times < 120) {
       try {
@@ -49,9 +43,9 @@ class YesCaptch {
           taskId: taskID,
         };
         const response = await fetch(url, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
         });
@@ -62,12 +56,11 @@ class YesCaptch {
           if (response) {
             return response;
           }
+        } else {
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
       times += 3;
-      await new Promise(resolve => setTimeout(resolve, 3000)); // 等待3秒钟
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // 等待3秒钟
     }
   }
 }

@@ -9,7 +9,8 @@ import pLimit from 'p-limit'; // 引入p-limit库
 const { Title, Paragraph } = Typography;
 
 import Caduceus from '@/job/cad/main';
-import YesCaptch from '@/job/yesCaptcha/main';
+import Ttorc from '@/job/ttorc/main';
+import {getCadRep,getCadRes} from '@/http/api/drop/cad/api'
 
 interface PrivateKeyItem {
   key: string;
@@ -20,7 +21,7 @@ interface PrivateKeyItem {
 const Page: React.FC = () => {
   const [fileContent, setFileContent] = useState<string>('');
   const [privateKeys, setPrivateKeys] = useState<PrivateKeyItem[]>([]);
-  const [yesCaptchaKey, setYesCaptchaKey] = useState<string>('');
+  const [damaKey, setDamaKey] = useState<string>('');
   const [inviter, setInviter] = useState<string>('');
   const [selectedTask, setSelectedTask] = useState<'sign' | 'invite'>('sign');
 
@@ -76,52 +77,60 @@ const Page: React.FC = () => {
         const randomDelay = Math.floor(Math.random() * 3000) + 1000; // 1-3秒随机延迟
         await delay(randomDelay);
 
+        let boo = false;
+        let response: any = "";
+
         if (selectedTask === 'sign') {
-          const yesCaptcha = new YesCaptch(
-            yesCaptchaKey,
-            "9d92cba2-ef28-49e0-96dc-9db26a4c786e",
-            "https://mint.caduceus.foundation",
-            "HCaptchaTaskProxyless"
-          );
-          const taskId = await yesCaptcha.createTask();
-          if (!taskId) {
-            newStatus = '获取任务ID失败';
-          } else {
-            const gRecaptchaResponse = await yesCaptcha.getResponse(taskId);
-            if (!gRecaptchaResponse) {
-              newStatus = '获取验证码失败';
-            } else {
-              const cad = new Caduceus();
-              const taskId_ = await cad.open(gRecaptchaResponse, key);
-              if (taskId_) {
-                const res:string | undefined = await cad.task(taskId_);
-                newStatus = res ?? '任务失败';
-              } else {
-                newStatus = '获取任务ID失败';
-              }
+
+          while (!boo) {
+            const res = await getCadRep({"damaKey":damaKey})
+            const resultid = res.data
+            const resp = await getCadRes({"damaKey":damaKey,"resultid":resultid})
+            response = resp.data
+            if (response) {
+              boo = true;
             }
+          }
+          
+          const cad = new Caduceus();
+          const taskId_ = await cad.open_jy(
+            response.captchaId,
+            response.captchaOutput,
+            response.genTime,
+            response.lotNumber,
+            response.passToken,
+            key
+          );
+          if (taskId_) {
+            const res: string | undefined = await cad.task(taskId_);
+            newStatus = res ?? '签到失败';
+          } else {
+            newStatus = '获取任务ID失败';
           }
 
         } else if (selectedTask === 'invite') {
-          const yesCaptcha = new YesCaptch(
-            yesCaptchaKey,
-            "9d92cba2-ef28-49e0-96dc-9db26a4c786e",
-            "https://mint.caduceus.foundation",
-            "HCaptchaTaskProxyless"
-          );
-          const taskId = await yesCaptcha.createTask();
-          if (!taskId) {
-            newStatus = '获取任务ID失败';
-          } else {
-            const gRecaptchaResponse = await yesCaptcha.getResponse(taskId);
-            if (!gRecaptchaResponse) {
-              newStatus = '获取验证码失败';
-            } else {
-              const cad = new Caduceus();
-              const res = await cad.invite(gRecaptchaResponse, inviter, key);
-              newStatus = res;
+          while (!boo) {
+            const res = await getCadRep({"damaKey":damaKey})
+            const resultid = res.data
+            const resp = await getCadRes({"damaKey":damaKey,"resultid":resultid})
+            response = resp.data
+            if (response) {
+              boo = true;
             }
           }
+
+          const cad = new Caduceus();
+          const res = await cad.invite_jy(    
+            response.captchaId,
+            response.captchaOutput,
+            response.genTime,
+            response.lotNumber,
+            response.passToken,
+            inviter,
+            key
+          );
+
+          newStatus = res;
         }
 
       } catch (error) {
@@ -137,7 +146,7 @@ const Page: React.FC = () => {
   };
 
   const executeTask = async () => {
-    if (!yesCaptchaKey.trim()) {
+    if (!damaKey.trim()) {
       Toast.error('请输入 yescaptcha 的密钥');
       return;
     }
@@ -182,9 +191,9 @@ const Page: React.FC = () => {
           <div className="flex">
             <Space spacing="loose">
               <Input
-                placeholder="请输入 yescaptcha 的密钥"
-                value={yesCaptchaKey}
-                onChange={(e) => setYesCaptchaKey(e as string)}
+                placeholder="请输入打码平台的密钥"
+                value={damaKey}
+                onChange={(e) => setDamaKey(e as string)}
               />
               <Input
                 placeholder="请输入邀请地址(小写)"
