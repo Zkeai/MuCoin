@@ -1,0 +1,28 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main # 或者你希望触发部署的其他分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.14.10" # 使用与你的项目兼容的 Node.js 版本
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Vercel
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
