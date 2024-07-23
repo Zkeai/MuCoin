@@ -58,7 +58,7 @@ const Page: React.FC = () => {
   const executeSingleTask = async (item: PrivateKeyItem) => {
     const { key, status } = item;
 
-    if (status !== '未处理') {
+    if (status !== '未处理' && status !== '任务出错') {
       return;
     }
 
