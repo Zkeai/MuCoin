@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
-          node-version: "20.14.10" # 使用与你的项目兼容的 Node.js 版本
+          node-version: "20" # 使用与你的项目兼容的 Node.js 版本
 
       - name: Install dependencies
         run: npm install
