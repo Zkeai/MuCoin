@@ -45,19 +45,13 @@
               "item": [
                 {
                   "name": "批量创建钱包",
-                  "path": "/wallet/create",
+                  "path": "/dashboard/wallet/create",
                   "click": true,
                   "item": []
                 },
                 {
-                  "name": "创建靓号钱包",
-                  "path": "/wallet/beauty",
-                  "click": true,
-                  "item": []
-                },
-                {
-                  "name": "钱包授权",
-                  "path": "/wallet/authorization",
+                  "name": "钱包归集",
+                  "path": "/dashboard/wallet/m21",
                   "click": true,
                   "item": []
                 }
