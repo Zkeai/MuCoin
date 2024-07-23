@@ -8,7 +8,7 @@
   ],
   "routes": [{ "src": "/(.*)", "dest": "/" }],
   "functions": {
-    "api/**/*.js": {
+    "app/api/**/*": {
       "maxDuration": 60
     }
   }
