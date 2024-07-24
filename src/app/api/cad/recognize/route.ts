@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Mu from '@/job/Mu/main';
+import Mu from '@/job/mu/main';
 
 export async function POST(req: NextRequest) {
 
