@@ -9,7 +9,7 @@ import pLimit from 'p-limit'; // 引入p-limit库
 const { Title, Paragraph } = Typography;
 
 import Caduceus from '@/job/cad/main';
-import {getCadRep,getCadRes,sign,task,invite} from '@/http/api/drop/cad/api'
+import {getCadRep,getCadRes,sign,task,cadInvite} from '@/http/api/drop/cad/api'
 
 interface PrivateKeyItem {
   key: string;
@@ -92,11 +92,11 @@ const Page: React.FC = () => {
           }
           
           const taskId_ = await sign(
-            {"captchaId":response.captchaId,
-              "captchaOutput":response.captchaOutput,
-              "genTime":response.genTime,
-              "lotNumber":response.lotNumber,
-              "passToken":response.passToken,
+            {"captchaId":response.captcha_id,
+              "captchaOutput":response.captcha_output,
+              "genTime":response.gen_time,
+              "lotNumber":response.lot_number,
+              "passToken":response.pass_token,
               "key":key
             }
           );
@@ -114,21 +114,21 @@ const Page: React.FC = () => {
         } else if (selectedTask === 'invite') {
           while (!boo) {
             const res = await getCadRep({"damaKey":damaKey})
-            const resultid = res.data ?? "打码失败"
+            const resultid = res.data 
             const resp = await getCadRes({"damaKey":damaKey,"resultid":resultid})
-            response = resp.data ?? "打码失败"
+            response = resp.data 
             if (response) {
               boo = true;
             }
           }
 
 
-          const res = await invite(    
-            {"captchaId":response.captchaId,
-              "captchaOutput":response.captchaOutput,
-              "genTime":response.genTime,
-              "lotNumber":response.lotNumber,
-              "passToken":response.passToken,
+          const res = await cadInvite(    
+            {"captchaId":response.captcha_id,
+              "captchaOutput":response.captcha_output,
+              "genTime":response.gen_time,
+              "lotNumber":response.lot_number,
+              "passToken":response.pass_token,
               "inviter":inviter,
               "key":key,
             }
@@ -169,7 +169,7 @@ const Page: React.FC = () => {
       return;
     }
 
-    const limit = pLimit(3); // 控制并发数为5
+    const limit = pLimit(5); // 控制并发数为5
     const tasks = privateKeys.map(item => limit(() => executeSingleTask(item)));
     await Promise.allSettled(tasks); // 使用Promise.allSettled代替Promise.all
   };

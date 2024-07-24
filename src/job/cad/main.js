@@ -68,7 +68,9 @@ class Cad {
 
       const responseData = await response.json();
       return responseData.taskId;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error during login:", error.message);
+    }
   }
   async open_jy(
     captchaId,
@@ -116,7 +118,9 @@ class Cad {
 
       const responseData = await response.json();
       return responseData.taskId;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error during login:", error.message);
+    }
   }
 
   async task(taskId) {

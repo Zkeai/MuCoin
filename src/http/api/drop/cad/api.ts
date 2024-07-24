@@ -39,6 +39,6 @@ export const sign = (data: CadSignCommonQuery): Promise<any> => {
 export const task = (data: CadTaskCommonQuery): Promise<any> => {
   return httpService.post<any>("/cad/task", data);
 };
-export const invite = (data: CadInviteCommonQuery): Promise<any> => {
+export const cadInvite = (data: CadInviteCommonQuery): Promise<any> => {
   return httpService.post<any>("/cad/invite", data);
 };
