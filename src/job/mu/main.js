@@ -3,7 +3,7 @@ class Mucoin {
     this.appkey = appkey;
     this.project_type = project_type;
     this.captcha_id = captcha_id;
-    this.baseUrl = "https://api.muyuai.top";
+    this.baseUrl = "http://mucoin.free.idcfengye.com";
   }
 
   async createTask() {
