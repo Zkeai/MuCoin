@@ -169,7 +169,7 @@ const Page: React.FC = () => {
       return;
     }
 
-    const limit = pLimit(5); // 控制并发数为5
+    const limit = pLimit(3); // 控制并发数为5
     const tasks = privateKeys.map(item => limit(() => executeSingleTask(item)));
     await Promise.allSettled(tasks); // 使用Promise.allSettled代替Promise.all
   };
