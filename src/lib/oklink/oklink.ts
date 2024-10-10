@@ -27,7 +27,7 @@ class Oklink {
         "Accept": "*/*",
         "Ok-Access-Key": this.apiKey,
       },
-      params, // 将 params 作为请求参数传递给 Axios
+      params,
     };
 
     try {
