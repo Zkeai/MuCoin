@@ -24,8 +24,4 @@ services:
           config:
             authType: anonymous
             methods: ["GET", "POST"] # 支持的 HTTP 方法
-      customDomains:
-        - domainName: "mucoin.muyuai.top" # 自定义域名
-          protocol: HTTP
-          routeConfigs:
-            - path: "/*"
+
