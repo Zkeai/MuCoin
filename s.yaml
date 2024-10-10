@@ -4,22 +4,28 @@ access: default
 
 services:
   my-nextjs-service:
-    component: devsapp/fc # 使用函数计算组件
+    component: devsapp/fc # 使用阿里云函数计算组件
     props:
-      region: cn-hangzhou # 设置服务区域
+      region: cn-hongkong # 服务区域
       service:
-        name: my-nextjs-service # 服务名称
+        name: my-nextjs-service
         description: "Next.js Serverless Application"
       function:
-        name: nextjs-function # 函数名称
+        name: nextjs-function
         description: "Next.js serverless function"
-        runtime: nodejs16 # 设置运行时环境
-        handler: index.handler # 函数入口
-        memorySize: 256 # 函数分配的内存
-        timeout: 120 # 函数超时时间
-        codeUri: ./ # 函数代码存储位置，指向 Next.js 项目根目录
+        runtime: nodejs16
+        handler: index.handler
+        memorySize: 256
+        timeout: 120
+        codeUri: ./ # 指定 Next.js 项目的代码路径
+      triggers:
+        - name: httpTrigger # 添加 HTTP 触发器
+          type: http
+          config:
+            authType: anonymous
+            methods: ["GET", "POST"] # 支持的 HTTP 方法
       customDomains:
-        - domainName: "example.com" # 自定义域名
+        - domainName: "mucoin.muyuai.top" # 自定义域名
           protocol: HTTP
           routeConfigs:
             - path: "/*"
