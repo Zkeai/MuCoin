@@ -4,19 +4,13 @@ access: default
 
 services:
   my-nextjs-service:
-    component: devsapp/fc # 使用阿里云函数计算组件
+    component: devsapp/nextjs # 使用阿里云函数计算组件
     props:
       region: cn-hongkong # 服务区域
-      service:
-        name: my-nextjs-service
-        description: "Next.js Serverless Application"
-      function:
-        name: nextjs-function
-        description: "Next.js serverless function"
-        runtime: nodejs16
-        handler: src/index.handler
-        memorySize: 256
-        timeout: 120
+      sourceDir: ./src # 代码目录，指向 src
+      customDomain: # 如果有自定义域名，配置如下
+        - domainName: mucoin.yobob.cn
+          protocol: HTTPS
       triggers:
         - name: httpTrigger # 添加 HTTP 触发器
           type: http
