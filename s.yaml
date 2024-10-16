@@ -15,6 +15,11 @@ services:
         handler: index.handler
         memorySize: 256
         timeout: 120
+        codeUri: ./ # 指定代码路径
       triggers:
         - name: httpTrigger # 添加 HTTP 触发器
           type: http
+          config:
+            authType: anonymous
+            methods: ["GET", "POST"] # 支持的 HTTP 方法
+
