@@ -14,10 +14,10 @@ services:
         name: nextjs-function
         description: "Next.js serverless function"
         runtime: nodejs16
-        handler: src/index.handler
+        handler: index.handler
         memorySize: 256
         timeout: 120
-        codeUri: ./ # 指定 Next.js 项目的代码路径
+        codeUri: src # 指定 Next.js 项目的代码路径
       triggers:
         - name: httpTrigger # 添加 HTTP 触发器
           type: http
