@@ -1,24 +1,15 @@
 edition: 1.0.0
 name: mucoin # 项目名称
-access: default
+access: default # 使用的阿里云访问方式
 
 services:
   next-app:
     component: devsapp/nextjs
     props:
       region: cn-hongkong # 部署区域
-      service:
-        name: mucoin
-        description: "mucoin"
-      sourceDir: ./src
-      runtime: nodejs16
-      serviceName: mucoin # 这里指定服务名称
+      serviceName: my-nextjs-service # 指定服务名称
+      sourceDir: ./src # 代码目录
+      runtime: nodejs16 # 运行环境
       customDomain:
-        - domainName: mucoin.yobob.cn
-          protocol: HTTPS
-      triggers:
-        - name: httpTrigger # 添加 HTTP 触发器
-          type: http
-          config:
-            authType: anonymous
-            methods: ["GET", "POST"] # 支持的 HTTP 方法
+        - domainName: mucoin.yobob.cn # 自定义域名
+          protocol: HTTPS # 协议
