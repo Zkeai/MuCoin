@@ -1,27 +1,20 @@
 edition: 1.0.0
-name: mucoin
+name: MuCoin
 access: default
 
 services:
-  my-nextjs-service:
+  MuCoin:
     component: devsapp/fc # 使用阿里云函数计算组件
     props:
       region: cn-hongkong # 服务区域
       service:
-        name: my-nextjs-service
-        description: "Next.js Serverless Application"
+        name: web-mucoin
       function:
-        name: nextjs-function
-        description: "Next.js serverless function"
+        name: mucoin-function
         runtime: nodejs16
-        handler: dist/app/page.handler
+        handler: index.handler
         memorySize: 256
         timeout: 120
-        codeUri: ./dist # 指定代码路径
       triggers:
         - name: httpTrigger # 添加 HTTP 触发器
           type: http
-          config:
-            authType: anonymous
-            methods: ["GET", "POST"] # 支持的 HTTP 方法
-
