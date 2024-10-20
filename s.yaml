@@ -1,21 +1,32 @@
 edition: 1.0.0
 name: MuCoin
-access: default
+access: "mac"
 
 services:
   MuCoin:
-    component: devsapp/fc # 使用阿里云函数计算组件
+    component: fc
+    actions: # 自定义执行逻辑，关于actions 的使用，可以参考：https://www.serverless-devs.com/serverless-devs/yaml#行为描述
+      pre-deploy: # 在deploy之前运行
+        - run: npm install
+          path: ./
+        - run: npm run build
+          path: ./
+
     props:
       region: cn-hongkong # 服务区域
       service:
         name: web-mucoin
       function:
         name: mucoin-function
-        runtime: nodejs16
-        handler: index.handler
-        memorySize: 256
-        timeout: 120
-        codeUri: ./ # 指定代码路径
+        runtime: nodejs20
+        memorySize: 1024
+        timeout: 60
+        caPort: 3000
+        codeUri: "./next/standalone" # 指定代码路径
+        customRuntimeConfig:
+          command:
+            - node
+            - server.js
       triggers:
         - name: httpTrigger # 添加 HTTP 触发器
           type: http
